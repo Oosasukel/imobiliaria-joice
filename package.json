@@ -1,0 +1,28 @@
+{
+  "name": "imobiliaria-joice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Oosasukel/imobiliaria-joice",
+  "author": "Oosasukel <rodrigo_gonn@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "faunadb": "^4.7.0",
+    "iron-session": "^6.2.1",
+    "next": "^12.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "18.11.0",
+    "@types/react": "18.0.21",
+    "typescript": "4.8.4"
+  }
+}
