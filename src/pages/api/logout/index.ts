@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { withSession } from "../../../api/middlewares/withSession";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { withSession } from '../../../api/middlewares/withSession';
 
 const logout = async (req: NextApiRequest, res: NextApiResponse) => {
   req.session.destroy();
