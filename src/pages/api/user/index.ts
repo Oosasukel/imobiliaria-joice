@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { withAuth } from "../../../api/middlewares/withAuth";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { withAuth } from '../../../api/middlewares/withAuth';
 
 const user = (req: NextApiRequest, res: NextApiResponse) => {
-  if (!req.session.user) return res.status(401).send("Não autorizado");
+  if (!req.session.user) return res.status(401).send('Não autorizado');
 
   return res.send({ user: req.session.user });
 };
