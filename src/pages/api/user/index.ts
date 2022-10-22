@@ -1,10 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { withAuth } from '../../../api/middlewares/withAuth';
+import nc from 'next-connect';
+import { auth } from '../../../api/middlewares/auth';
+import { ironSession } from '../../../api/middlewares/ironSession';
+import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 
-const user = (req: NextApiRequest, res: NextApiResponse) => {
-  if (!req.session.user) return res.status(401).send('Não autorizado');
+const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
+handler.use(ironSession);
+handler.use(auth);
 
+handler.get(async (req, res) => {
   return res.json({ user: req.session.user });
-};
+});
 
-export default withAuth(user);
+export default handler;

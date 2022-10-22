@@ -1,8 +1,14 @@
 import { query as q } from 'faunadb';
 import { NextApiRequest, NextApiResponse } from 'next';
+import nc from 'next-connect';
+import { ironSession } from '../../../api/middlewares/ironSession';
+import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 
-const houses = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
+handler.use(ironSession);
+
+handler.get(async (req, res) => {
   const filters = {
     paraAluguel: true,
     localizacao: 'Capela do Alto',
@@ -27,6 +33,6 @@ const houses = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     return res.json(error);
   }
-};
+});
 
-export default houses;
+export default handler;

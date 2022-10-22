@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import { query as q } from 'faunadb';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { withSession } from '../../../api/middlewares/withSession';
+import nc from 'next-connect';
+import { ironSession } from '../../../api/middlewares/ironSession';
+import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 
 interface User {
@@ -11,7 +13,10 @@ interface User {
   passwordHash: string;
 }
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
+handler.use(ironSession);
+
+handler.get(async (req, res) => {
   if (!req.body || !req.body.email || !req.body.password)
     return res.status(400).send('email or password are missing');
 
@@ -43,6 +48,6 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   await req.session.save();
 
   res.json(userDTO);
-};
+});
 
-export default withSession(login);
+export default handler;
