@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { query as q } from 'faunadb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withSession } from '../../../api/middlewares/withSession';
-import { fauna } from '../../../services/fauna';
+import { fauna } from '../../../api/services/fauna';
 
 interface User {
   id: string;
