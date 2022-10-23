@@ -1,8 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { withSession } from "../../../api/middlewares/withSession";
-import { fauna } from "../../../services/fauna";
-import { query as q } from "faunadb";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
+import { query as q } from 'faunadb';
+import { NextApiRequest, NextApiResponse } from 'next';
+import nc from 'next-connect';
+import { ironSession } from '../../../api/middlewares/ironSession';
+import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
+import { fauna } from '../../../api/services/fauna';
 
 interface User {
   id: string;
@@ -11,27 +13,30 @@ interface User {
   passwordHash: string;
 }
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
+handler.use(ironSession);
+
+handler.post(async (req, res) => {
   if (!req.body || !req.body.email || !req.body.password)
-    return res.status(400).send("email or password are missing");
+    return res.status(400).send('email or password are missing');
 
   const { email, password } = req.body;
 
   let user: User;
   try {
-    const response = await fauna.query<any>(
-      q.Get(q.Match(q.Index("user_by_email"), email))
+    const { data, ref } = await fauna.query<any>(
+      q.Get(q.Match(q.Index('user_by_email'), email))
     );
 
-    user = { ...response.data, id: response.ref };
+    user = { ...data, id: ref };
   } catch {
-    return res.status(403).send("invalid email or password");
+    return res.status(403).send('invalid email or password');
   }
 
   const passwordIsCorrect = await bcrypt.compare(password, user.passwordHash);
 
   if (!passwordIsCorrect)
-    return res.status(403).send("invalid email or password");
+    return res.status(403).send('invalid email or password');
 
   const userDTO = {
     id: user.id,
@@ -42,7 +47,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   req.session.user = userDTO;
   await req.session.save();
 
-  res.json(userDTO);
-};
+  return res.json(userDTO);
+});
 
-export default withSession(login);
+export default handler;
