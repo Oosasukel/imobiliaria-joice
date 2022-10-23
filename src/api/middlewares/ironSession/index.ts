@@ -1,14 +1,13 @@
-import { getIronSession } from 'iron-session';
+import { ironSession as ironSessionExpress } from 'iron-session/express';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextHandler } from 'next-connect';
-import { NextResponse } from 'next/server';
 
 export const ironSession = async (
   req: NextApiRequest,
   res: NextApiResponse,
   next: NextHandler
 ) => {
-  const session = await getIronSession(req, NextResponse.next(), {
+  const ironSessionHandler = ironSessionExpress({
     cookieName: 'imobiliaria-joice',
     password: process.env.IRON_SESSION_PASSWORD,
     cookieOptions: {
@@ -16,7 +15,5 @@ export const ironSession = async (
     },
   });
 
-  req.session = session;
-
-  next();
+  ironSessionHandler(req as any, res as any, next);
 };

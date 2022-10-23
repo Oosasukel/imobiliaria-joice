@@ -6,7 +6,6 @@ export const auth = (
   res: NextApiResponse,
   next: NextHandler
 ) => {
-  console.log('req.session', req.session);
   if (!req.session.user) return res.status(401).send('Não autorizado');
 
   return next();

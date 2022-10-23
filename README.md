@@ -15,3 +15,7 @@ Crie um arquivo `.env` e configure conforme o `.env.example`
 ## Execute
 
 `yarn dev`
+
+# Docs
+
+[Docs](https://leeward-salsa-89a.notion.site/Docs-7ce3c299a196415c8828b9f23d8f3f25)

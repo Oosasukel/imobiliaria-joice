@@ -16,7 +16,7 @@ interface User {
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 handler.use(ironSession);
 
-handler.get(async (req, res) => {
+handler.post(async (req, res) => {
   if (!req.body || !req.body.email || !req.body.password)
     return res.status(400).send('email or password are missing');
 
@@ -24,11 +24,11 @@ handler.get(async (req, res) => {
 
   let user: User;
   try {
-    const response = await fauna.query<any>(
+    const { data, ref } = await fauna.query<any>(
       q.Get(q.Match(q.Index('user_by_email'), email))
     );
 
-    user = { ...response.data, id: response.ref };
+    user = { ...data, id: ref };
   } catch {
     return res.status(403).send('invalid email or password');
   }
@@ -47,7 +47,7 @@ handler.get(async (req, res) => {
   req.session.user = userDTO;
   await req.session.save();
 
-  res.json(userDTO);
+  return res.json(userDTO);
 });
 
 export default handler;
