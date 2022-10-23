@@ -28,6 +28,8 @@ handler.post(async (req, res) => {
   // } catch (error) {
   //   return res.json(error);
   // }
+
+  return res.json({ ok: true });
 });
 
 export default handler;
