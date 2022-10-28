@@ -15,12 +15,12 @@ import { House, HouseFilters, HouseResponseDTO } from '../../../api/types';
 
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
-handler.use(ironSession);
 handler.get(async (req, res) => {
   const { query } = req;
   const filters: HouseFilters = {
     pageSize: Number(query.pageSize) || undefined,
-    initialId: query.initialId as string,
+    initialId: (query.initialId as string) || undefined,
+    city: (query.city as string) || undefined,
     minRentPrice: Number(query.minRentPrice) || undefined,
     maxRentPrice: Number(query.maxRentPrice) || undefined,
     minSellPrice: Number(query.minSellPrice) || undefined,
@@ -46,7 +46,7 @@ handler.get(async (req, res) => {
         id: house.ref.id,
         type: houseTypes[house.data.typeId],
         ...house.data,
-        admComments: req.session.user ? house.data.admComments : undefined,
+        admComments: undefined,
       })),
     });
   } catch (error) {
@@ -54,6 +54,7 @@ handler.get(async (req, res) => {
   }
 });
 
+handler.use(ironSession);
 handler.use(auth);
 handler.post(async (req, res) => {
   const form = formidable({ multiples: true });

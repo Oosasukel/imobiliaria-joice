@@ -42,7 +42,7 @@ const create = async () => {
       q.CreateIndex({
         name: 'houses_by_city',
         source: q.Collection('Houses'),
-        terms: [{ field: ['data', 'city'] }],
+        values: [{ field: ['data', 'city'] }, { field: ['ref'] }],
       }),
       true
     )
@@ -86,6 +86,14 @@ const create = async () => {
                         p: q.Get(q.Var('x')),
                       },
                       q.And(
+                        q.If(
+                          q.ContainsField('city', q.Var('filterParams')),
+                          q.Equals(
+                            q.Select(['data', 'city'], q.Var('p')),
+                            q.Select(['city'], q.Var('filterParams'))
+                          ),
+                          true
+                        ),
                         q.If(
                           q.ContainsField(
                             'minSellPrice',

@@ -33,6 +33,7 @@ export interface HouseResponseDTO extends House {
 export interface HouseFilters {
   pageSize?: number;
   initialId?: string;
+  city?: string;
   minRentPrice?: number;
   maxRentPrice?: number;
   minSellPrice?: number;
