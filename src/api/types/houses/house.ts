@@ -14,7 +14,7 @@ export interface House {
   toSell: boolean;
   sellPrice: number;
   condominiumPrice: number;
-  IptuPrice: number;
+  iptuPrice: number;
   aboutTheProperty: string;
   aboutTheCondominium: string;
   admComments: string;

@@ -63,11 +63,13 @@ handler.post(async (req, res) => {
       return res.status(400).send('Error parsing files');
     }
 
-    let images: File[];
-    if ((files.images as any).length) {
-      images = files.images as File[];
-    } else {
-      images = [files.images as File];
+    let images: File[] = [];
+    if (files.images) {
+      if ((files.images as any).length) {
+        images = files.images as File[];
+      } else {
+        images = [files.images as File];
+      }
     }
 
     const newHouse: House = {
@@ -86,7 +88,7 @@ handler.post(async (req, res) => {
       toSell: fields.toSell === 'true',
       sellPrice: Number(fields.sellPrice),
       condominiumPrice: Number(fields.condominiumPrice),
-      IptuPrice: Number(fields.IptuPrice),
+      iptuPrice: Number(fields.iptuPrice),
       aboutTheProperty: String(fields.aboutTheProperty),
       aboutTheCondominium: String(fields.aboutTheCondominium),
       admComments: String(fields.admComments),

@@ -1,7 +1,15 @@
 import { query as q } from 'faunadb';
-import { deleteObject, ref } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
+import formidable, { File } from 'formidable';
+import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
+import { v4 as uuid } from 'uuid';
 import { houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
 import { ironSession } from '../../../api/middlewares/ironSession';
@@ -65,4 +73,115 @@ handler.delete(async (req, res) => {
   return res.status(204).end();
 });
 
+handler.patch(async (req, res) => {
+  const { id } = req.query;
+
+  const form = formidable({ multiples: true });
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).send('Error parsing files');
+    }
+
+    let images: File[] = [];
+    if (files.images) {
+      if ((files.images as any).length) {
+        images = files.images as File[];
+      } else {
+        images = [files.images as File];
+      }
+    }
+
+    let house: House;
+    try {
+      const faunaResponse = await fauna.query<any>(
+        q.Get(q.Ref(q.Collection('Houses'), id))
+      );
+      house = faunaResponse.data;
+    } catch {
+      return res.status(404).send('casa não encontrada');
+    }
+
+    house = {
+      ...house,
+      city: String(fields.city),
+      district: String(fields.district),
+      street: String(fields.street),
+      typeId: Number(fields.typeId),
+      squareMeters: Number(fields.squareMeters),
+      bedrooms: Number(fields.bedrooms),
+      suites: Number(fields.suites),
+      bathrooms: Number(fields.bathrooms),
+      parkingSpaces: Number(fields.parkingSpaces),
+      furnished: fields.furnished === 'true',
+      toRent: fields.toRent === 'true',
+      rentPrice: Number(fields.rentPrice),
+      toSell: fields.toSell === 'true',
+      sellPrice: Number(fields.sellPrice),
+      condominiumPrice: Number(fields.condominiumPrice),
+      iptuPrice: Number(fields.iptuPrice),
+      aboutTheProperty: String(fields.aboutTheProperty),
+      aboutTheCondominium: String(fields.aboutTheCondominium),
+      admComments: String(fields.admComments),
+      statusId: Number(fields.statusId),
+    };
+
+    for (const image of images) {
+      const imageExtension = image.originalFilename.split('.').pop();
+      const imageRef = ref(storage, `housesImages/${uuid()}.${imageExtension}`);
+      const imageFile = await fs.readFile(image.filepath);
+      await uploadBytes(imageRef, imageFile, {
+        contentType: image.mimetype,
+      });
+      const imageUrl = await getDownloadURL(imageRef);
+      house.images.push({
+        referenceUrl: imageRef.fullPath,
+        url: imageUrl,
+      });
+    }
+
+    let imagesToRemove: string[] = [];
+    if (fields.imagesToRemove) {
+      if (typeof fields.imagesToRemove === 'string') {
+        imagesToRemove = [fields.imagesToRemove as string];
+      } else {
+        imagesToRemove = fields.imagesToRemove as string[];
+      }
+    }
+
+    for (const imageToRemove of imagesToRemove) {
+      const imageRef = ref(storage, imageToRemove);
+      try {
+        await deleteObject(imageRef);
+      } catch (error) {
+        console.error(
+          `Erro ao excluir imagem ${imageRef.fullPath} do firebase`
+        );
+        console.error(error);
+      }
+
+      house.images = house.images.filter(
+        (item) => item.referenceUrl !== imageToRemove
+      );
+    }
+
+    const faunaResponse = await fauna.query<any>(
+      q.Update(q.Ref(q.Collection('Houses'), id), { data: house })
+    );
+
+    const newHouseResponse: HouseResponseDTO = {
+      id: faunaResponse.ref.id,
+      type: houseTypes[Number(faunaResponse.data.typeId)],
+      ...faunaResponse.data,
+    };
+
+    return res.json(newHouseResponse);
+  });
+});
+
 export default handler;
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
