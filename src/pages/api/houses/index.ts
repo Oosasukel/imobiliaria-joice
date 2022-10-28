@@ -5,108 +5,55 @@ import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 import { v4 as uuid } from 'uuid';
+import { houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
 import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 import { storage } from '../../../api/services/firebase';
-
-interface House {
-  id: any;
-  city: string;
-  district: string;
-  street: string;
-  typeId: number;
-  squareMeters: number;
-  bedrooms: number;
-  suites: number;
-  bathrooms: number;
-  parkingSpaces: number;
-  furnished: boolean;
-  toRent: boolean;
-  rentPrice: number;
-  toSell: boolean;
-  sellPrice: number;
-  condominiumPrice: number;
-  IptuPrice: number;
-  aboutTheProperty: string;
-  aboutTheCondominium: string;
-  AdmComments: string;
-  statusId: number;
-  images: Array<{
-    referenceUrl: string;
-    url: string;
-  }>;
-}
+import { House, HouseFilters, HouseResponseDTO } from '../../../api/types';
 
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
+handler.use(ironSession);
 handler.get(async (req, res) => {
   const { query } = req;
-  const pageSize = Number(query.pageSize) || undefined;
-  const initialId = query.initialId;
-  const filters = {
-    type: Number(query.type) || undefined,
-    minPrice: Number(query.minPrice) || undefined,
-    maxPrice: Number(query.maxPrice) || undefined,
+  const filters: HouseFilters = {
+    pageSize: Number(query.pageSize) || undefined,
+    initialId: query.initialId as string,
+    minRentPrice: Number(query.minRentPrice) || undefined,
+    maxRentPrice: Number(query.maxRentPrice) || undefined,
+    minSellPrice: Number(query.minSellPrice) || undefined,
+    maxSellPrice: Number(query.maxSellPrice) || undefined,
+    typeId: Number(query.typeId) || undefined,
     bedrooms: Number(query.bedrooms) || undefined,
     bathrooms: Number(query.bathrooms) || undefined,
+    parkingSpaces: Number(query.parkingSpaces) || undefined,
     suites: Number(query.suites) || undefined,
-    furnished: query.furnished === 'true',
+    furnished: query.furnished ? query.furnished === 'true' : undefined,
     minSquareMeters: Number(query.minSquareMeters) || undefined,
     maxSquareMeters: Number(query.maxSquareMeters) || undefined,
   };
 
   try {
     const { data, after } = await fauna.query<any>(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection('Houses')), {
-          size: pageSize,
-          after: initialId
-            ? [q.Ref(q.Collection('Houses'), initialId)]
-            : undefined,
-        }),
-        q.Lambda('house', q.Get(q.Var('house')))
-      )
+      q.Call('HouseFilter', filters)
     );
 
     return res.json({
       nextId: after ? after[0].id : undefined,
-      data,
+      data: data.map((house) => ({
+        id: house.ref.id,
+        type: houseTypes[house.data.typeId],
+        ...house.data,
+        admComments: req.session.user ? house.data.admComments : undefined,
+      })),
     });
   } catch (error) {
     return res.json(error);
   }
-
-  // const body = await getBody(req);
-  // return res.json(body);
-  // const filters = {
-  //   paraAluguel: true,
-  //   localizacao: 'Capela do Alto',
-  // };
-
-  // try {
-  //   const { data } = await fauna.query<any>(
-  //     q.Map(
-  //       q.Paginate(
-  //         q.Intersection(
-  //           q.Match(q.Index('house_by_paraAluguel'), filters.paraAluguel),
-  //           q.Match(q.Index('house_by_localizacao'), filters.localizacao)
-  //         )
-  //       ),
-  //       q.Lambda('house', q.Get(q.Var('house')))
-  //     )
-  //   );
-
-  //   const houses = data.map((item) => ({ id: item.ref, ...item.data }));
-
-  //   return res.json(houses);
-  // } catch (error) {
-  //   return res.json(error);
-  // }
 });
 
-handler.use(ironSession);
 handler.use(auth);
 handler.post(async (req, res) => {
   const form = formidable({ multiples: true });
@@ -123,7 +70,6 @@ handler.post(async (req, res) => {
     }
 
     const newHouse: House = {
-      id: null,
       city: String(fields.city),
       district: String(fields.district),
       street: String(fields.street),
@@ -142,7 +88,7 @@ handler.post(async (req, res) => {
       IptuPrice: Number(fields.IptuPrice),
       aboutTheProperty: String(fields.aboutTheProperty),
       aboutTheCondominium: String(fields.aboutTheCondominium),
-      AdmComments: String(fields.AdmComments),
+      admComments: String(fields.admComments),
       statusId: Number(fields.statusId),
       images: [],
     };
@@ -167,9 +113,13 @@ handler.post(async (req, res) => {
       })
     );
 
-    newHouse.id = faunaResponse.ref.id;
+    const newHouseResponse: HouseResponseDTO = {
+      id: faunaResponse.ref.id,
+      type: houseTypes[Number(faunaResponse.data.typeId)],
+      ...faunaResponse.data,
+    };
 
-    return res.json(newHouse);
+    return res.status(201).json(newHouseResponse);
   });
 });
 

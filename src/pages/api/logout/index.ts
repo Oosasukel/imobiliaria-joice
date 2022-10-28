@@ -8,7 +8,7 @@ handler.use(ironSession);
 
 handler.get(async (req, res) => {
   req.session.destroy();
-  res.send({ ok: true });
+  res.end();
 });
 
 export default handler;
