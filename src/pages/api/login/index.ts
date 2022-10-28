@@ -28,7 +28,7 @@ handler.post(async (req, res) => {
       q.Get(q.Match(q.Index('user_by_email'), email))
     );
 
-    user = { ...data, id: ref };
+    user = { ...data, id: ref.id };
   } catch {
     return res.status(403).send('invalid email or password');
   }

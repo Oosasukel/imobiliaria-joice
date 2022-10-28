@@ -1,5 +1,10 @@
 import { query as q } from 'faunadb';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import formidable, { File } from 'formidable';
 import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -11,52 +16,66 @@ import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 import { storage } from '../../../api/services/firebase';
-import { House, HouseFilters, HouseResponseDTO } from '../../../api/types';
+import { House, HouseResponseDTO } from '../../../api/types';
 
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
+handler.use(ironSession);
 handler.get(async (req, res) => {
-  const { query } = req;
-  const filters: HouseFilters = {
-    pageSize: Number(query.pageSize) || undefined,
-    initialId: (query.initialId as string) || undefined,
-    city: (query.city as string) || undefined,
-    minRentPrice: Number(query.minRentPrice) || undefined,
-    maxRentPrice: Number(query.maxRentPrice) || undefined,
-    minSellPrice: Number(query.minSellPrice) || undefined,
-    maxSellPrice: Number(query.maxSellPrice) || undefined,
-    typeId: Number(query.typeId) || undefined,
-    bedrooms: Number(query.bedrooms) || undefined,
-    bathrooms: Number(query.bathrooms) || undefined,
-    parkingSpaces: Number(query.parkingSpaces) || undefined,
-    suites: Number(query.suites) || undefined,
-    furnished: query.furnished ? query.furnished === 'true' : undefined,
-    minSquareMeters: Number(query.minSquareMeters) || undefined,
-    maxSquareMeters: Number(query.maxSquareMeters) || undefined,
-  };
+  const { id } = req.query;
 
+  let house: HouseResponseDTO;
   try {
-    const { data, after } = await fauna.query<any>(
-      q.Call('HouseFilter', filters)
+    const faunaResponse = await fauna.query<any>(
+      q.Get(q.Ref(q.Collection('Houses'), id))
     );
-
-    return res.json({
-      nextId: after ? after[0].id : undefined,
-      data: data.map((house) => ({
-        id: house.ref.id,
-        type: houseTypes[house.data.typeId],
-        ...house.data,
-        admComments: undefined,
-      })),
-    });
-  } catch (error) {
-    return res.json(error);
+    house = {
+      id: faunaResponse.ref.id,
+      type: houseTypes[faunaResponse.data.typeId],
+      ...faunaResponse.data,
+      admComments: req.session.user
+        ? faunaResponse.data.admComments
+        : undefined,
+    };
+  } catch {
+    return res.status(404).send('casa não encontrada');
   }
+
+  return res.json(house);
 });
 
-handler.use(ironSession);
 handler.use(auth);
-handler.post(async (req, res) => {
+handler.delete(async (req, res) => {
+  const { id } = req.query;
+
+  let house: House;
+  try {
+    const faunaResponse = await fauna.query<any>(
+      q.Get(q.Ref(q.Collection('Houses'), id))
+    );
+    house = faunaResponse.data;
+  } catch {
+    return res.status(404).send('casa não encontrada');
+  }
+
+  for (const image of house.images) {
+    const imageRef = ref(storage, image.referenceUrl);
+    try {
+      await deleteObject(imageRef);
+    } catch (error) {
+      console.error(`Erro ao excluir imagem ${imageRef.fullPath} do firebase`);
+      console.error(error);
+    }
+  }
+
+  await fauna.query(q.Delete(q.Ref(q.Collection('Houses'), id)));
+
+  return res.status(204).end();
+});
+
+handler.patch(async (req, res) => {
+  const { id } = req.query;
+
   const form = formidable({ multiples: true });
   form.parse(req, async (err, fields, files) => {
     if (err) {
@@ -72,7 +91,18 @@ handler.post(async (req, res) => {
       }
     }
 
-    const newHouse: House = {
+    let house: House;
+    try {
+      const faunaResponse = await fauna.query<any>(
+        q.Get(q.Ref(q.Collection('Houses'), id))
+      );
+      house = faunaResponse.data;
+    } catch {
+      return res.status(404).send('casa não encontrada');
+    }
+
+    house = {
+      ...house,
       city: String(fields.city),
       district: String(fields.district),
       street: String(fields.street),
@@ -93,7 +123,6 @@ handler.post(async (req, res) => {
       aboutTheCondominium: String(fields.aboutTheCondominium),
       admComments: String(fields.admComments),
       statusId: Number(fields.statusId),
-      images: [],
     };
 
     for (const image of images) {
@@ -104,16 +133,39 @@ handler.post(async (req, res) => {
         contentType: image.mimetype,
       });
       const imageUrl = await getDownloadURL(imageRef);
-      newHouse.images.push({
+      house.images.push({
         referenceUrl: imageRef.fullPath,
         url: imageUrl,
       });
     }
 
+    let imagesToRemove: string[] = [];
+    if (fields.imagesToRemove) {
+      if (typeof fields.imagesToRemove === 'string') {
+        imagesToRemove = [fields.imagesToRemove as string];
+      } else {
+        imagesToRemove = fields.imagesToRemove as string[];
+      }
+    }
+
+    for (const imageToRemove of imagesToRemove) {
+      const imageRef = ref(storage, imageToRemove);
+      try {
+        await deleteObject(imageRef);
+      } catch (error) {
+        console.error(
+          `Erro ao excluir imagem ${imageRef.fullPath} do firebase`
+        );
+        console.error(error);
+      }
+
+      house.images = house.images.filter(
+        (item) => item.referenceUrl !== imageToRemove
+      );
+    }
+
     const faunaResponse = await fauna.query<any>(
-      q.Create(q.Collection('Houses'), {
-        data: newHouse,
-      })
+      q.Update(q.Ref(q.Collection('Houses'), id), { data: house })
     );
 
     const newHouseResponse: HouseResponseDTO = {
@@ -122,7 +174,7 @@ handler.post(async (req, res) => {
       ...faunaResponse.data,
     };
 
-    return res.status(201).json(newHouseResponse);
+    return res.json(newHouseResponse);
   });
 });
 
