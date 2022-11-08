@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { GlobalCSS } from '../../styles/global';
 import { Container } from './styles';

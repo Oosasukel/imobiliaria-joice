@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { Card, Tipo } from './styles';
 
 export const Casa = ({ tipo, valor, linkImagem }) => {
   return (
     <body>
       <Card>
-        <img src={linkImagem} alt="Casa" />
+        <img src={linkImagem} alt="foto da casa" />
         <div className="conteudo-card">
           <div className="titulo-card">
             <Tipo>{tipo}</Tipo>

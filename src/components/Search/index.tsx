@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from '../Button';
 import * as S from './styles';
 
@@ -21,7 +22,11 @@ export const Search = () => {
           <S.Input type="text" placeholder="alugue até" />
         </S.ContainerInput>
 
-        <Button variant="secondary" iconPath="/icons/filtros.svg">
+        <Button
+          variant="secondary"
+          iconPath="/icons/filtros.svg"
+          iconAlt="icone dos filtros"
+        >
           Mais filtros
         </Button>
 

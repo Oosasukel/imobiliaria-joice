@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
@@ -18,6 +19,7 @@ export const FaleConosco = () => {
             variant="thirdy"
             iconPath="/icons/whatsappbranco.svg"
             width="100%"
+            iconAlt="icone do whatsapp"
           >
             Ir para o Whatsapp
           </Button>
