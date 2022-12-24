@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 100%;
+  width: auto;
 `;
 
-export const Tabs = styled.div``;
+export const Tabs = styled.div`
+  display: flex;
+`;
 
 interface TabProps {
   ativo?: boolean;
@@ -12,6 +14,7 @@ interface TabProps {
 
 export const Tab = styled.button<TabProps>`
   padding: 12px 32px;
+  flex-grow: 1;
   border: none;
   font-weight: 700;
   font-size: 16px;
@@ -26,40 +29,86 @@ export const Tab = styled.button<TabProps>`
   &:last-child {
     border-radius: 0 8px 0 0;
   }
+
+  @media (min-width: 600px) {
+    flex-grow: 0;
+  }
+`;
+
+export const Content = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 0px 8px 8px 8px;
+
+  .react-select-container {
+    width: 100%;
+  }
+
+  .react-select__control {
+    border: none;
+    box-shadow: none;
+  }
+
+  .react-select__value-container {
+    padding: 0;
+  }
+
+  .react-select__single-value {
+    margin: 0;
+  }
+
+  .react-select__indicators {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+  }
 `;
 
 export const ContainerInputs = styled.div`
   width: 100%;
-  padding: 32px;
-  display: flex;
-  gap: 32px;
-  background: #ffffff;
-  border-radius: 0px 8px 8px 8px;
+  display: grid;
+  grid-gap: 16px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr min-content 1fr;
+    flex-grow: 1;
+  }
 `;
 
 export const ContainerInput = styled.div`
   flex-grow: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-gap: 16px;
   align-items: center;
 
   img {
-    margin-right: 16px;
     width: 32px;
     height: 32px;
   }
 `;
 
 export const Input = styled.input`
-  flex-grow: 1;
+  width: 100%;
   outline: none;
-
   border: none;
   font-weight: 400;
   font-size: 16px;
 `;
 
 export const Divider = styled.div`
-  width: 1px;
-
   background: #d0d0d0;
+  width: 100%;
+  height: 1px;
+
+  @media (min-width: 600px) {
+    width: 1px;
+    height: auto;
+  }
 `;

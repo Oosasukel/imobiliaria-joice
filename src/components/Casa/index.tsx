@@ -1,25 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
-import { Card, Tipo } from './styles';
+import * as S from './styles';
 
-export const Casa = ({ tipo, valor, linkImagem }) => {
+export const Casa = () => {
   return (
-    <body>
-      <Card>
-        <img src={linkImagem} alt="foto da casa" />
-        <div className="conteudo-card">
-          <div className="titulo-card">
-            <Tipo>{tipo}</Tipo>
+    <S.Card>
+      <a href="/casa">
+        <img src="/images/casa.png" alt="foto da casa" />
+      </a>
+      <S.ConteudoCard>
+        <S.Endereco>
+          <p> Apartamento </p>
+          <p className="street"> Rua Alves Guimarães </p>
+          <p> Alto da Moóca, São Paulo</p>
+        </S.Endereco>
 
-            <h1 className="endereço">Rua Alves Guimarães </h1>
-            <p className="endereço2">Alto da Moóca,São Paulo</p>
-          </div>
-          <p className="medida">36 m² &bull; 2 Quartos &bull; 1 Banheiro</p>
-          <div className="preços">
-            <p className="condominio"> Condomínio R$ 475</p>
-            <p className="valor">R$ {valor}</p>
-          </div>
-        </div>
-      </Card>
-    </body>
+        <p className="tags">36 m² &bull; 2 Quartos &bull; 1 Banheiro</p>
+
+        <p> Condomínio R$ 475</p>
+        <p className="price"> R$ 2.500 </p>
+      </S.ConteudoCard>
+    </S.Card>
   );
 };

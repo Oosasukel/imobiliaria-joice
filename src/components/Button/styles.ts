@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface StyledButtonProps {
-  variant: 'primary' | 'secondary' | 'thirdy';
+  variant: 'primary' | 'secondary' | 'thirdy' | 'fourth';
   width: string;
 }
 
@@ -12,6 +12,8 @@ export const StyledButton = styled.button<StyledButtonProps>`
         return '#ffffff';
       case 'thirdy':
         return '#25D366';
+      case 'fourth':
+        return '#65CFAF';
       default:
         return '#dc2a2a';
     }
@@ -20,6 +22,8 @@ export const StyledButton = styled.button<StyledButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+
   width: ${({ width }) => (width ? width : 'initial')};
 
   border-radius: 8px;

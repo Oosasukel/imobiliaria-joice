@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import * as S from './styles';
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'thirdy';
+  variant?: 'primary' | 'secondary' | 'thirdy' | 'fourth';
   iconPath?: string;
   iconAlt?: string;
   width?: string;
@@ -16,9 +16,10 @@ export const Button = ({
   iconPath,
   iconAlt,
   width,
+  ...rest
 }: ButtonProps) => {
   return (
-    <S.StyledButton variant={variant} width={width}>
+    <S.StyledButton {...rest} variant={variant} width={width}>
       {iconPath ? (
         <>
           <img src={iconPath} alt={iconAlt} />

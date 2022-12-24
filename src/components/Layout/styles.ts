@@ -1,15 +1,32 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface ContainerProps {
+  withMobileBackground: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
-  background: url(/images/background.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+
+  ${({ withMobileBackground }) => {
+    if (withMobileBackground)
+      return css`
+        background: url(/images/background.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      `;
+  }}
+
+  @media (min-width: 600px) {
+    background: url(/images/background.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 `;
 
-export const Background = styled.div`
+export const Gradient = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -23,7 +40,7 @@ export const Content = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-
+  overflow: auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -35,7 +52,11 @@ export const Content = styled.div`
 export const Main = styled.main`
   flex-grow: 1;
   width: 100%;
-  max-width: 1170px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 64px 32px;
+  padding: 32px 16px;
+
+  @media (min-width: 600px) {
+    padding: 64px 32px;
+  }
 `;

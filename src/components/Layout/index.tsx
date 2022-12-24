@@ -1,11 +1,20 @@
+import { ReactNode } from 'react';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
 import * as S from './styles';
 
-export const Layout = ({ children }) => {
+interface LayoutProps {
+  children: ReactNode;
+  withMobileBackground?: boolean;
+}
+
+export const Layout = ({
+  children,
+  withMobileBackground = true,
+}: LayoutProps) => {
   return (
-    <S.Container>
-      <S.Background />
+    <S.Container withMobileBackground={withMobileBackground}>
+      <S.Gradient />
 
       <S.Content>
         <Header />

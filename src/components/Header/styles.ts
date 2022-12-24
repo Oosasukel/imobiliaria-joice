@@ -7,7 +7,11 @@ export const Container = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 32px;
+  padding: 16px;
+
+  @media (min-width: 600px) {
+    padding: 16px 32px;
+  }
 
   .logo {
     cursor: pointer;
@@ -15,22 +19,27 @@ export const Container = styled.header`
   }
 
   .links {
-    display: flex;
-    gap: 64px;
+    display: none;
 
-    a {
-      color: #000000;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
+    @media (min-width: 600px) {
+      display: flex;
+      gap: 64px;
+
+      a {
+        color: #000000;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+      }
     }
   }
 
-  .comprar {
-    margin-left: 64px;
-  }
+  .menu {
+    width: 32px;
+    height: 32px;
 
-  .fale-conosco {
-    margin-left: 64px;
+    @media (min-width: 600px) {
+      display: none;
+    }
   }
 `;

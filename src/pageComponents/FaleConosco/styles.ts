@@ -4,15 +4,24 @@ export const Container = styled.div`
   width: 100%;
   display: grid;
   grid-gap: 32px;
-  grid-template-columns: 1fr 385px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 385px;
+  }
 `;
 
 export const Perfil = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 600px) {
+    align-items: initial;
+  }
 
   h1 {
+    width: 100%;
     font-weight: 700;
     font-size: 32px;
     color: #000000;
@@ -24,6 +33,7 @@ export const Perfil = styled.div`
     font-size: 16px;
     color: #747474;
     margin-bottom: 16px;
+    width: 100%;
   }
 
   img {
