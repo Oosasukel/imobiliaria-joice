@@ -1,10 +1,27 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
-  height: min-content;
-  background: #ffffff;
-  padding: 32px;
+interface ContainerProps {
+  showOnMobile: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   width: 100%;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  height: min-content;
+
+  ${({ showOnMobile }) => {
+    if (showOnMobile)
+      return css`
+        background: #ffffff;
+        padding: 32px;
+        border: 1px solid #dcdcdc;
+        border-radius: 8px;
+      `;
+  }}
+
+  @media (min-width: 600px) {
+    background: #ffffff;
+    padding: 32px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+  }
 `;
