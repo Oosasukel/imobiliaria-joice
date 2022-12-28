@@ -1,14 +1,18 @@
+import { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import * as S from './styles';
 
-interface ChekboxProps {
+interface ChekboxProps
+  extends DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
   label: string;
-  name: string;
 }
 
-export const Radio = ({ label, name }: ChekboxProps) => {
+export const Radio = ({ label, ...rest }: ChekboxProps) => {
   return (
-    <S.Label htmlFor={label}>
-      <input type="radio" id={label} name={name} value={label} />
+    <S.Label htmlFor={label.toLowerCase()}>
+      <input type="radio" id={label.toLowerCase()} {...rest} />
       <span>{label}</span>
     </S.Label>
   );

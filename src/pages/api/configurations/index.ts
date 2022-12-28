@@ -9,6 +9,7 @@ import { fauna } from '../../../api/services/fauna';
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
 handler.get(async (req, res) => {
+  console.log('pegou as configs aquiiiiiiiiiiiiiiiiiii');
   const { data } = await fauna.query<any>(
     q.Select(
       [0],

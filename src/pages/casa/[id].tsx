@@ -1,4 +1,4 @@
-import { Casa } from '../pageComponents/Casa';
+import { Casa } from '../../pageComponents/Casa';
 
 const CasaPage = () => {
   return <Casa />;

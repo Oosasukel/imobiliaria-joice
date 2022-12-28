@@ -1,38 +1,179 @@
 /* eslint-disable @next/next/no-img-element */
+import { useRouter } from 'next/router';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Button } from '../../components/Button';
-import { Casa } from '../../components/Casa';
 import { Layout } from '../../components/Layout';
+import { Loading } from '../../components/Loading';
 import { Search } from '../../components/Search';
+import { useApi } from '../../hooks/useApi';
+import { House } from '../../hooks/useApi/types';
+import { useAppState } from '../../hooks/useAppState';
 import * as S from './styles';
 
 export const Casas = () => {
+  const router = useRouter();
+  const {
+    state: { filters, city, toRent },
+    operations: { setFilters, setSelectedHouse },
+  } = useAppState();
+  const [loading, setLoading] = useState(true);
+  const { getHouses } = useApi();
+  const [houses, setHouses] = useState<House[]>([]);
+  const [initialId, setInitialId] = useState<string>();
+
+  const fetchHouses = useCallback(
+    async (query: any) => {
+      setLoading(true);
+
+      const {
+        data: { data, nextId },
+      } = await getHouses({
+        ...query,
+        initialId,
+        maxRentPrice: query.toRent === 'true' ? query.maxPrice : undefined,
+        minRentPrice: query.toRent === 'true' ? query.minPrice : undefined,
+        maxSellPrice: query.toRent === 'true' ? undefined : query.maxPrice,
+        minSellPrice: query.toRent === 'true' ? undefined : query.minPrice,
+        pageSize: '12',
+      });
+      setInitialId(nextId);
+      setHouses(data);
+
+      setLoading(false);
+    },
+    [getHouses, initialId]
+  );
+
+  useEffect(() => {
+    if (router.isReady) {
+      setFilters(router.query);
+
+      fetchHouses(router.query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query, setFilters]);
+
+  const getHouseTags = useCallback((house: House) => {
+    const houseTags = [];
+
+    if (house.squareMeters) houseTags.push(`${house.squareMeters} m²`);
+    if (house.bedrooms)
+      houseTags.push(
+        `${house.bedrooms} Quarto${house.bedrooms > 1 ? 's' : ''}`
+      );
+    if (house.bathrooms)
+      houseTags.push(
+        `${house.bathrooms} Banheiro${house.bathrooms > 1 ? 's' : ''}`
+      );
+
+    return (
+      <>
+        {houseTags.map((tag, index) => {
+          const last = index === houseTags.length - 1;
+
+          if (last) return <Fragment key={index}> {tag}</Fragment>;
+
+          return <Fragment key={index}> {tag} &bull;</Fragment>;
+        })}
+      </>
+    );
+  }, []);
+
+  const handleHouseClick = useCallback(
+    (house: House) => {
+      setSelectedHouse(house);
+
+      router.push({
+        pathname: `/casa/${house.id}`,
+        query: {
+          toRent: router.query.toRent,
+        },
+      });
+    },
+    [router, setSelectedHouse]
+  );
+
   return (
     <Layout>
-      <Search />
+      <Search
+        loading={loading}
+        onSubmit={() =>
+          router.push({
+            pathname: '/casas',
+            query: { ...filters, city, toRent } as any,
+          })
+        }
+      />
 
-      <S.Titulo> Imóveis para alugar </S.Titulo>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <S.Titulo>
+            Imóveis para{' '}
+            {router.query.toRent === 'false' ? 'comprar' : 'alugar'}
+          </S.Titulo>
 
-      <S.Lista>
-        <Casa />
+          <S.Lista>
+            {houses.map((house) => (
+              <S.Card key={house.id} onClick={() => handleHouseClick(house)}>
+                <img
+                  src={
+                    house.images.length
+                      ? house.images[0].url
+                      : '/images/no-image.png'
+                  }
+                  alt="foto da casa"
+                />
 
-        <Casa />
+                <S.ConteudoCard>
+                  <S.Endereco>
+                    <p>{house.type}</p>
+                    <p className="street">{house.street}</p>
+                    <p>
+                      {house.district}, {house.city}
+                    </p>
+                  </S.Endereco>
 
-        <Casa />
+                  <p className="tags">{getHouseTags(house)}</p>
 
-        <Casa />
+                  {router.query.toRent === 'true' && !!house.condominiumPrice && (
+                    <p>
+                      Condomínio{' '}
+                      {house.condominiumPrice.toLocaleString('pt-br', {
+                        style: 'currency',
+                        currency: 'BRL',
+                        maximumFractionDigits: 0,
+                      })}
+                    </p>
+                  )}
 
-        <Casa />
+                  <p className="price">
+                    {(router.query.toRent === 'true'
+                      ? house.rentPrice
+                      : house.sellPrice
+                    ).toLocaleString('pt-br', {
+                      style: 'currency',
+                      currency: 'BRL',
+                      maximumFractionDigits: 0,
+                    })}
+                  </p>
+                </S.ConteudoCard>
+              </S.Card>
+            ))}
+          </S.Lista>
 
-        <Casa />
+          {!houses.length && (
+            <span>Não encontramos nenhuma casa para esses filtros</span>
+          )}
 
-        <Casa />
-
-        <Casa />
-      </S.Lista>
-
-      <S.Pagnation>
-        <Button variant="secondary"> Ver mais</Button>
-      </S.Pagnation>
+          {!!initialId && (
+            <S.Pagnation>
+              <Button variant="secondary"> Ver mais</Button>
+            </S.Pagnation>
+          )}
+        </>
+      )}
     </Layout>
   );
 };

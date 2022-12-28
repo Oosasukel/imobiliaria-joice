@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { Loading } from '../Loading';
 import * as S from './styles';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -8,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconPath?: string;
   iconAlt?: string;
   width?: string;
+  loading?: boolean;
 }
 
 export const Button = ({
@@ -16,8 +18,11 @@ export const Button = ({
   iconPath,
   iconAlt,
   width,
+  loading,
   ...rest
 }: ButtonProps) => {
+  if (loading) return <Loading />;
+
   return (
     <S.StyledButton {...rest} variant={variant} width={width}>
       {iconPath ? (

@@ -1,21 +1,41 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import Select from 'react-select';
+import { useAppState } from '../../hooks/useAppState';
 import { Button } from '../Button';
 import { Filters } from './Filters';
 import * as S from './styles';
 
-const options = [
-  {
-    value: 'Capela do Alto',
-    label: 'Capela do Alto',
-  },
-  { value: 'Sorocaba', label: 'Sorocaba' },
-  { value: 'Tatuí', label: 'Tatuí' },
-];
+interface SearchProps {
+  onSubmit?: () => void;
+  loading?: boolean;
+}
 
-export const Search = () => {
+export const Search = ({ onSubmit, loading }: SearchProps) => {
+  const {
+    state: {
+      city,
+      cities,
+      toRent,
+      filters: { maxPrice },
+    },
+    operations: { setFilters, setToRent, setCity },
+  } = useAppState();
   const [filtersAtivo, setFiltersAtivo] = useState(false);
+  const selectCities = useMemo(
+    () => cities.map((name) => ({ value: name, label: name })),
+    [cities]
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    if (router.query.toRent) {
+      setToRent(router.query.toRent === 'true');
+    }
+  }, [router.isReady, router.query.toRent, setToRent]);
 
   const toggleFiltersAtivo = () => {
     setFiltersAtivo(!filtersAtivo);
@@ -25,18 +45,25 @@ export const Search = () => {
     <>
       <S.Container>
         <S.Tabs>
-          <S.Tab ativo>Quero alugar</S.Tab>
-          <S.Tab>Quero comprar</S.Tab>
+          <S.Tab ativo={toRent} onClick={() => setToRent(true)}>
+            Quero alugar
+          </S.Tab>
+          <S.Tab ativo={!toRent} onClick={() => setToRent(false)}>
+            Quero comprar
+          </S.Tab>
         </S.Tabs>
         <S.Content>
           <S.ContainerInputs>
             <S.ContainerInput>
               <img src="/icons/pesquisa.svg" alt="" />
               <Select
-                options={options}
+                defaultValue={city ? { value: city, label: city } : undefined}
+                options={selectCities}
+                onChange={(newValue) => setCity(newValue.value)}
                 classNamePrefix="react-select"
                 className="react-select-container"
                 placeholder="Busque por cidade"
+                instanceId="city-select"
               />
             </S.ContainerInput>
 
@@ -44,7 +71,17 @@ export const Search = () => {
 
             <S.ContainerInput>
               <img src="/icons/money.svg" alt="" />
-              <S.Input type="text" placeholder="alugue até" />
+              <S.Input
+                type="number"
+                placeholder={toRent ? 'Alugue até' : 'Valor até'}
+                value={maxPrice}
+                onChange={(event) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    maxPrice: event.target.value,
+                  }))
+                }
+              />
             </S.ContainerInput>
           </S.ContainerInputs>
 
@@ -57,7 +94,9 @@ export const Search = () => {
             Mais filtros
           </Button>
 
-          <Button> Buscar imóvel </Button>
+          <Button onClick={onSubmit} loading={loading}>
+            Buscar imóvel
+          </Button>
         </S.Content>
       </S.Container>
 

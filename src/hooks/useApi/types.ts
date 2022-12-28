@@ -6,6 +6,9 @@ export interface Login {
 
 export interface Configurations {
   name: string;
+  perfilImageUrl: string;
+  phoneNumber: string;
+  creci: string;
 }
 
 export interface Enums {
@@ -56,6 +59,7 @@ export interface EditHouse extends CreateHouse {
 export interface House {
   id: string;
   type: string;
+  status: string;
   city: string;
   district: string;
   street: string;

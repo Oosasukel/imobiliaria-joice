@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { useState } from 'react';
-import { GlobalCSS } from '../../styles/global';
 import { Menu } from './Menu';
 import * as S from './styles';
 
@@ -14,17 +13,14 @@ export const Header = () => {
 
   return (
     <S.Container>
-      {/* @TODO mudar o estilo global para o _app.tsx */}
-      <GlobalCSS />
-
       <Link href="/">
-        <img className="logo" src="/images/logo.jpg" alt="" />
+        <img className="logo" src="/images/logo.png" alt="" />
       </Link>
 
       <div className="links">
-        <Link href="/casas">Imóveis para alugar</Link>
+        <Link href="/casas?toRent=true">Imóveis para alugar</Link>
 
-        <Link href="/casas">Imóveis para comprar</Link>
+        <Link href="/casas?toRent=false">Imóveis para comprar</Link>
 
         <Link href="/fale-conosco">Fale conosco</Link>
       </div>

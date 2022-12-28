@@ -7,4 +7,6 @@ export const Label = styled.label`
     color: #000000;
     margin-left: 8px;
   }
+
+  cursor: pointer;
 `;

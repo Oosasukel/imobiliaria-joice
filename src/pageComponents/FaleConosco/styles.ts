@@ -40,5 +40,6 @@ export const Perfil = styled.div`
     width: 250px;
     height: 250px;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;

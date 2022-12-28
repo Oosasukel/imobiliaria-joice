@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 
-interface OverlayProps {
-  ativo?: boolean;
-}
-
-export const Overlay = styled.div<OverlayProps>`
+export const Overlay = styled.div`
   justify-content: center;
   padding: 16px;
   position: fixed;
@@ -13,17 +9,24 @@ export const Overlay = styled.div<OverlayProps>`
   right: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.3);
-  display: ${({ ativo }) => (ativo ? 'flex' : 'none')};
-
-  @media (min-width: 600px) {
-  }
+  display: flex;
 `;
 
-export const Container = styled.div`
+export const Container = styled.form`
   width: 590px;
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
 `;
 
 export const Header = styled.div`
@@ -74,11 +77,6 @@ export const Conteudo = styled.div`
 
   @media (min-width: 600px) {
     border-radius: 0 8px 0 0;
-  }
-
-  label {
-    margin-left: 10px;
-    cursor: pointer;
   }
 
   p {
@@ -154,7 +152,12 @@ export const RoundButton = styled.button<RoundButtonProps>`
 export const ContainerMoveis = styled.div`
   label {
     color: #000000;
-    margin-right: 10px;
+    margin-right: 16px;
+    padding-left: 4px;
+  }
+
+  & * {
+    cursor: pointer;
   }
 `;
 

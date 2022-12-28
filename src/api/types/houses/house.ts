@@ -28,6 +28,7 @@ export interface House {
 export interface HouseResponseDTO extends House {
   id: string;
   type: string;
+  status: string;
 }
 
 export interface HouseFilters {
@@ -46,4 +47,6 @@ export interface HouseFilters {
   furnished?: boolean;
   minSquareMeters?: number;
   maxSquareMeters?: number;
+  toRent: boolean;
+  statusId?: number;
 }

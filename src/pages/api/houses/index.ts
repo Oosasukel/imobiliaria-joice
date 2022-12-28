@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 import { v4 as uuid } from 'uuid';
-import { houseTypes } from '../../../api/enums';
+import { houseStatus, houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
 import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
@@ -15,6 +15,7 @@ import { House, HouseFilters, HouseResponseDTO } from '../../../api/types';
 
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
+handler.use(ironSession);
 handler.get(async (req, res) => {
   const { query } = req;
   const filters: HouseFilters = {
@@ -33,6 +34,8 @@ handler.get(async (req, res) => {
     furnished: query.furnished ? query.furnished === 'true' : undefined,
     minSquareMeters: Number(query.minSquareMeters) || undefined,
     maxSquareMeters: Number(query.maxSquareMeters) || undefined,
+    toRent: query.toRent ? query.toRent === 'true' : true,
+    statusId: req.session.user ? undefined : 2,
   };
 
   try {
@@ -45,6 +48,7 @@ handler.get(async (req, res) => {
       data: data.map((house) => ({
         id: house.ref.id,
         type: houseTypes[house.data.typeId],
+        status: houseStatus[house.data.statusId],
         ...house.data,
         admComments: undefined,
       })),
@@ -54,7 +58,6 @@ handler.get(async (req, res) => {
   }
 });
 
-handler.use(ironSession);
 handler.use(auth);
 handler.post(async (req, res) => {
   const form = formidable({ multiples: true });
@@ -119,6 +122,7 @@ handler.post(async (req, res) => {
     const newHouseResponse: HouseResponseDTO = {
       id: faunaResponse.ref.id,
       type: houseTypes[Number(faunaResponse.data.typeId)],
+      status: houseStatus[Number(faunaResponse.data.statusId)],
       ...faunaResponse.data,
     };
 

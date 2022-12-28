@@ -14,4 +14,8 @@ export const GlobalCSS = createGlobalStyle`
     *, input, button {
         font-family: Roboto, sans-serif;
     }
+
+    a {
+        text-decoration: none;
+    }
 `;

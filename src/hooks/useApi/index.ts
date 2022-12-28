@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { api } from '../../api/services/api';
+import { api } from '../../services/api';
 import {
   Configurations,
   CreateHouse,
@@ -124,6 +124,14 @@ export const useApi = () => {
     return api.get<House>(`/api/houses/${id}`);
   }, []);
 
+  const getAdmHouses = useCallback((filters: HouseFilters) => {
+    return api.get<HousesList>('/api/adm/houses', { params: filters });
+  }, []);
+
+  const getAdmHouse = useCallback((id: string) => {
+    return api.get<House>(`/api/adm/houses/${id}`);
+  }, []);
+
   return {
     login,
     logout,
@@ -136,5 +144,7 @@ export const useApi = () => {
     editHouse,
     deleteHouse,
     getHouse,
+    getAdmHouses,
+    getAdmHouse,
   };
 };

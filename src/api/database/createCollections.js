@@ -87,6 +87,29 @@ const create = async () => {
                       },
                       q.And(
                         q.If(
+                          q.ContainsField('toRent', q.Var('filterParams')),
+                          q.If(
+                            q.Select(['toRent'], q.Var('filterParams')),
+                            q.Equals(
+                              q.Select(['data', 'toRent'], q.Var('p')),
+                              true
+                            ),
+                            q.Equals(
+                              q.Select(['data', 'toSell'], q.Var('p')),
+                              true
+                            )
+                          ),
+                          true
+                        ),
+                        q.If(
+                          q.ContainsField('statusId', q.Var('filterParams')),
+                          q.Equals(
+                            q.Select(['data', 'statusId'], q.Var('p')),
+                            q.Select(['statusId'], q.Var('filterParams'))
+                          ),
+                          true
+                        ),
+                        q.If(
                           q.ContainsField('city', q.Var('filterParams')),
                           q.Equals(
                             q.Select(['data', 'city'], q.Var('p')),
