@@ -1,4 +1,3 @@
-import { getCookie, setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { AppProps as NextAppProps } from 'next/app';
 import Head from 'next/head';
@@ -49,35 +48,35 @@ CustomApp.getInitialProps = async ({
     pageProps = await Component.getInitialProps(ctx);
   }
 
-  const cookieConfigs = getCookie('configs', { req, res });
-  const cookieEnums = getCookie('enums', { req, res });
-  const cookieCities = getCookie('cities', { req, res });
+  // const cookieConfigs = getCookie('configs', { req, res });
+  // const cookieEnums = getCookie('enums', { req, res });
+  // const cookieCities = getCookie('cities', { req, res });
 
-  if (cookieConfigs && cookieEnums && cookieCities) {
-    configs = JSON.parse(cookieConfigs as string);
-    enums = JSON.parse(cookieEnums as string);
-    cities = JSON.parse(cookieCities as string);
-  } else {
-    const { data: configsResponse } = await api.get<Configurations>(
-      '/api/configurations'
-    );
-    const { data: enumsResponse } = await api.get<Enums>('/api/enums');
-    const { data: citiesResponse } = await api.get<string[]>('/api/cities');
-    configs = configsResponse;
-    enums = enumsResponse;
-    cities = citiesResponse;
+  // if (cookieConfigs && cookieEnums && cookieCities) {
+  //   configs = JSON.parse(cookieConfigs as string);
+  //   enums = JSON.parse(cookieEnums as string);
+  //   cities = JSON.parse(cookieCities as string);
+  // } else {
+  const { data: configsResponse } = await api.get<Configurations>(
+    '/api/configurations'
+  );
+  const { data: enumsResponse } = await api.get<Enums>('/api/enums');
+  const { data: citiesResponse } = await api.get<string[]>('/api/cities');
+  configs = configsResponse;
+  enums = enumsResponse;
+  cities = citiesResponse;
 
-    const expires = new Date();
-    expires.setMinutes(expires.getMinutes() + 30);
+  // const expires = new Date();
+  // expires.setMinutes(expires.getMinutes() + 30);
 
-    setCookie('configs', JSON.stringify(configsResponse), {
-      req,
-      res,
-      expires,
-    });
-    setCookie('enums', JSON.stringify(enumsResponse), { req, res, expires });
-    setCookie('cities', JSON.stringify(citiesResponse), { req, res, expires });
-  }
+  // setCookie('configs', JSON.stringify(configsResponse), {
+  //   req,
+  //   res,
+  //   expires,
+  // });
+  // setCookie('enums', JSON.stringify(enumsResponse), { req, res, expires });
+  // setCookie('cities', JSON.stringify(citiesResponse), { req, res, expires });
+  // }
 
   return { ...pageProps, configs, enums, cities } as AppProps;
 };

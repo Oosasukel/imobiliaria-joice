@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
 import { Button } from '../../components/Button';
 import { Layout } from '../../components/Layout';
 import * as S from './styles';
@@ -18,7 +19,7 @@ export const GenericError = ({ message }: GenericErrorProps) => {
           </div>
           <div>
             <Button>
-              <a href="/">Inicio</a>
+              <Link href="/">Inicio</Link>
             </Button>
           </div>
         </div>
