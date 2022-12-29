@@ -13,7 +13,7 @@ interface AppProps extends NextAppProps {
 const CustomApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AppProvider
-      configs={{} as Configurations}
+      configs={{ phoneNumber: '' } as Configurations}
       enums={{ status: [], types: [] }}
       cities={[]}
     >
