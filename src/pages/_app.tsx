@@ -42,21 +42,11 @@ CustomApp.getInitialProps = async ({
   let configs: Configurations;
   let enums: Enums;
   let cities: string[];
-  const { req, res } = ctx;
 
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
 
-  // const cookieConfigs = getCookie('configs', { req, res });
-  // const cookieEnums = getCookie('enums', { req, res });
-  // const cookieCities = getCookie('cities', { req, res });
-
-  // if (cookieConfigs && cookieEnums && cookieCities) {
-  //   configs = JSON.parse(cookieConfigs as string);
-  //   enums = JSON.parse(cookieEnums as string);
-  //   cities = JSON.parse(cookieCities as string);
-  // } else {
   const { data: configsResponse } = await api.get<Configurations>(
     '/api/configurations'
   );
@@ -65,18 +55,6 @@ CustomApp.getInitialProps = async ({
   configs = configsResponse;
   enums = enumsResponse;
   cities = citiesResponse;
-
-  // const expires = new Date();
-  // expires.setMinutes(expires.getMinutes() + 30);
-
-  // setCookie('configs', JSON.stringify(configsResponse), {
-  //   req,
-  //   res,
-  //   expires,
-  // });
-  // setCookie('enums', JSON.stringify(enumsResponse), { req, res, expires });
-  // setCookie('cities', JSON.stringify(citiesResponse), { req, res, expires });
-  // }
 
   return { ...pageProps, configs, enums, cities } as AppProps;
 };
