@@ -11,54 +11,54 @@ export const Casa = () => {
       <Card>
         <S.Galery>
           <S.Flex>
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
-            <div>
-              <img src="/images/casap.png" alt="" />
+            <div className="divGalery">
+              <img className="imgGalery" src="/images/casap.png" alt="" />
             </div>
 
             <label>
-              <img src="/icons/+.svg" alt="" />
+              <img className="iconFile" src="/icons/+.svg" alt="" />
 
-              <Input type="file" id="" />
+              <Input className="file" type="file" id="" />
             </label>
           </S.Flex>
         </S.Galery>
@@ -98,14 +98,14 @@ export const Casa = () => {
             </div>
 
             <div className="chekbox">
-              <input className="input" type={'checkbox'} />
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Mobiliada</label>
             </div>
           </S.Grid>
 
           <S.Valor>
             <div className="chekbox">
-              <input className="input" type={'checkbox'} />
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Aluguel</label>
             </div>
 
@@ -117,7 +117,7 @@ export const Casa = () => {
 
           <S.Valor>
             <div className="chekbox">
-              <input className="input" type={'checkbox'} />
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Venda</label>
             </div>
 
@@ -143,23 +143,23 @@ export const Casa = () => {
           <Input placeholder="Observações ADM" />
 
           <S.Status>
-            <div>
-              <input type={'checkbox'} />
+            <div className="statusInput">
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Já alugada</label>
             </div>
 
-            <div>
-              <input type={'checkbox'} />
+            <div className="statusInput">
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Já vendida</label>
             </div>
 
-            <div>
-              <input type={'checkbox'} />
+            <div className="statusInput">
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Disponivel</label>
             </div>
 
-            <div>
-              <input type={'checkbox'} />
+            <div className="statusInput">
+              <input className="inputCheckbox" type={'checkbox'} />
               <label>Rascunho</label>
             </div>
           </S.Status>

@@ -5,7 +5,7 @@ export const Container = styled.div`
   display: grid;
   grid-gap: 32px;
 
-  @media (min-width: 600px) {
+  @media (min-width: 720px) {
     grid-template-columns: 1fr 385px;
   }
 `;
@@ -16,7 +16,7 @@ export const Perfil = styled.div`
   flex-direction: column;
   align-items: center;
 
-  @media (min-width: 600px) {
+  @media (min-width: 720px) {
     align-items: initial;
   }
 

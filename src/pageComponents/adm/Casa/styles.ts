@@ -9,14 +9,21 @@ export const Galery = styled.div`
 export const Flex = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 8px;
 
-  img {
+  .imgGalery {
+    object-fit: cover;
     width: 100%;
+    height: 100%;
+  }
+
+  .divGalery {
+    overflow: hidden;
+    border: #dcdcdc solid 2px;
+    border-radius: 8px;
     height: 90px;
-    cursor: pointer;
   }
 
   label {
@@ -26,14 +33,56 @@ export const Flex = styled.div`
     border: 2px dashed #dcdcdc;
     border-radius: 8px;
     cursor: pointer;
+    height: 90px;
+  }
+  .iconFile {
+    height: 100%;
+    width: 100%;
+  }
 
-    img {
-      width: 32px;
+  .file {
+    position: absolute;
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 8px;
+
+    .imgGalery {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
     }
 
-    input {
-      position: absolute;
-      display: none;
+    .divGalery {
+      overflow: hidden;
+      border: #dcdcdc solid 2px;
+      border-radius: 8px;
+      height: 90px;
+    }
+
+    label {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      border: 2px dashed #dcdcdc;
+      border-radius: 8px;
+      cursor: pointer;
+      height: 90px;
+
+      .iconFile {
+        height: 100%;
+        width: 100%;
+      }
+
+      .file {
+        position: absolute;
+        display: none;
+      }
     }
   }
 `;
@@ -51,7 +100,7 @@ export const Valor = styled.div`
     margin-top: 16px;
   }
 
-  .input {
+  .inputCheckbox {
     height: 24px;
     width: 24px;
     cursor: pointer;
@@ -81,7 +130,7 @@ export const Grid = styled.div`
       margin-top: 16px;
     }
 
-    .input {
+    .inputChekbox {
       width: 24px;
       height: 24px;
     }
@@ -97,7 +146,7 @@ export const Grid = styled.div`
     gap: 8px;
   }
 
-  .input {
+  .inputChekbox {
     width: 24px;
     height: 24px;
   }
@@ -108,13 +157,13 @@ export const Status = styled.div`
     display: flex;
     gap: 16px;
 
-    div {
+    .statusInput {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    input {
+    .inputCheckbox {
       height: 24px;
       width: 24px;
     }
@@ -124,13 +173,13 @@ export const Status = styled.div`
   flex-direction: column;
   gap: 16px;
 
-  div {
+  .statusInput {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  input {
+  .inputCheckbox {
     height: 24px;
     width: 24px;
   }
