@@ -13,10 +13,31 @@ export const Flex = styled.div`
   align-items: center;
   gap: 8px;
 
+  .image-container {
+    position: relative;
+  }
+
+  .remove-image {
+    right: 4px;
+    top: 4px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    background: #dc2a2a;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+
+    position: absolute;
+  }
+
   img {
     width: 100%;
     height: 90px;
-    cursor: pointer;
   }
 
   label {
@@ -66,12 +87,22 @@ export const Conteudo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
 `;
 
 export const Grid = styled.div`
   @media (min-width: 850px) {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 122px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 122px;
     gap: 16px;
 
     .chekbox {
@@ -107,33 +138,11 @@ export const Status = styled.div`
   @media (min-width: 850px) {
     display: flex;
     gap: 16px;
-
-    div {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    input {
-      height: 24px;
-      width: 24px;
-    }
   }
 
   display: flex;
   flex-direction: column;
   gap: 16px;
-
-  div {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  input {
-    height: 24px;
-    width: 24px;
-  }
 `;
 
 export const Actions = styled.div`

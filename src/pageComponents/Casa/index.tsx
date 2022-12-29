@@ -154,18 +154,19 @@ export const Casa = () => {
                   </S.Flex>
                 )}
 
-                {(toRent === undefined || toRent) && !!house.condominiumPrice && (
-                  <S.Flex>
-                    <p>Condomínio</p>
-                    <p>
-                      {house.condominiumPrice.toLocaleString('pt-br', {
-                        style: 'currency',
-                        currency: 'BRL',
-                        maximumFractionDigits: 0,
-                      })}
-                    </p>
-                  </S.Flex>
-                )}
+                {(toRent === undefined || toRent) &&
+                  !!house.condominiumPrice && (
+                    <S.Flex>
+                      <p>Condomínio</p>
+                      <p>
+                        {house.condominiumPrice.toLocaleString('pt-br', {
+                          style: 'currency',
+                          currency: 'BRL',
+                          maximumFractionDigits: 0,
+                        })}
+                      </p>
+                    </S.Flex>
+                  )}
 
                 {(toRent === undefined || toRent) && !!house.iptuPrice && (
                   <S.Flex>

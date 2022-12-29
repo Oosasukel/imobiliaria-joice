@@ -27,8 +27,6 @@ export interface HousesList {
 }
 
 export interface CreateHouse {
-  id: string;
-  type: string;
   city: string;
   district: string;
   street: string;
@@ -49,10 +47,12 @@ export interface CreateHouse {
   aboutTheCondominium: string;
   admComments: string;
   statusId: string;
-  images: File[];
+  images: ImageItem[];
+  imagesToAdd: File[];
 }
 
 export interface EditHouse extends CreateHouse {
+  id: string;
   imagesToRemove: string[];
 }
 

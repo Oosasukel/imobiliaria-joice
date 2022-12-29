@@ -40,8 +40,6 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
       <Formik
         initialValues={filtersContext}
         onSubmit={(values) => {
-          // same shape as initial values
-          // console.log('values', { ...filters, ...values });
           setFiltersContext({
             ...filters,
             ...values,
@@ -100,7 +98,7 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                 ))}
               </S.Checkboxes>
 
-              <S.Divisor></S.Divisor>
+              <S.Divisor />
 
               <S.Grid>
                 <div>
@@ -124,7 +122,9 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                   />
                 </div>
               </S.Grid>
-              <S.Divisor></S.Divisor>
+
+              <S.Divisor />
+
               <S.Grid>
                 <S.ContainerTextRoundButton>
                   <p>Quartos</p>
@@ -160,7 +160,9 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                   </S.RoundButton>
                 </S.CountOptions>
               </S.Grid>
-              <S.Divisor></S.Divisor>
+
+              <S.Divisor />
+
               <S.Grid>
                 <S.ContainerTextRoundButton>
                   <p>Banheiros</p>
@@ -196,7 +198,9 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                   </S.RoundButton>
                 </S.CountOptions>
               </S.Grid>
-              <S.Divisor></S.Divisor>
+
+              <S.Divisor />
+
               <S.Grid>
                 <S.ContainerTextRoundButton>
                   <p>Súites</p>
@@ -232,7 +236,9 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                   </S.RoundButton>
                 </S.CountOptions>
               </S.Grid>
-              <S.Divisor></S.Divisor>
+
+              <S.Divisor />
+
               <S.Grid>
                 <S.ContainerTextRoundButton>
                   <p>Vagas</p>
@@ -268,7 +274,8 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                   </S.RoundButton>
                 </S.CountOptions>
               </S.Grid>
-              <S.Divisor></S.Divisor>
+
+              <S.Divisor />
 
               {toRent && (
                 <>
@@ -295,7 +302,7 @@ export const Filters = ({ ativo = false, onClose }: FiltersProps) => {
                     <label htmlFor="furnished-no">Não</label>
                   </S.ContainerMoveis>
 
-                  <S.Divisor></S.Divisor>
+                  <S.Divisor />
                 </>
               )}
 

@@ -10,14 +10,18 @@ import { House } from '../../hooks/useApi/types';
 import { useAppState } from '../../hooks/useAppState';
 import * as S from './styles';
 
-export const Casas = () => {
+interface CasasProps {
+  admVersion?: boolean;
+}
+
+export const Casas = ({ admVersion }: CasasProps) => {
   const router = useRouter();
   const {
     state: { filters, city, toRent },
     operations: { setFilters, setSelectedHouse },
   } = useAppState();
   const [loading, setLoading] = useState(true);
-  const { getHouses } = useApi();
+  const { getHouses, getAdmHouses } = useApi();
   const [houses, setHouses] = useState<House[]>([]);
   const [initialId, setInitialId] = useState<string>();
 
@@ -27,7 +31,7 @@ export const Casas = () => {
 
       const {
         data: { data, nextId },
-      } = await getHouses({
+      } = await (admVersion ? getAdmHouses : getHouses)({
         ...query,
         initialId,
         maxRentPrice: query.toRent === 'true' ? query.maxPrice : undefined,
@@ -41,7 +45,7 @@ export const Casas = () => {
 
       setLoading(false);
     },
-    [getHouses, initialId]
+    [admVersion, getAdmHouses, getHouses, initialId]
   );
 
   useEffect(() => {
@@ -84,22 +88,22 @@ export const Casas = () => {
       setSelectedHouse(house);
 
       router.push({
-        pathname: `/casa/${house.id}`,
+        pathname: `${admVersion ? '/adm' : ''}/casa/${house.id}`,
         query: {
           toRent: router.query.toRent,
         },
       });
     },
-    [router, setSelectedHouse]
+    [admVersion, router, setSelectedHouse]
   );
 
   return (
-    <Layout>
+    <Layout admVersion={admVersion}>
       <Search
         loading={loading}
         onSubmit={() =>
           router.push({
-            pathname: '/casas',
+            pathname: `${admVersion ? '/adm' : ''}/casas`,
             query: { ...filters, city, toRent } as any,
           })
         }
@@ -137,16 +141,17 @@ export const Casas = () => {
 
                   <p className="tags">{getHouseTags(house)}</p>
 
-                  {router.query.toRent === 'true' && !!house.condominiumPrice && (
-                    <p>
-                      Condomínio{' '}
-                      {house.condominiumPrice.toLocaleString('pt-br', {
-                        style: 'currency',
-                        currency: 'BRL',
-                        maximumFractionDigits: 0,
-                      })}
-                    </p>
-                  )}
+                  {router.query.toRent === 'true' &&
+                    !!house.condominiumPrice && (
+                      <p>
+                        Condomínio{' '}
+                        {house.condominiumPrice.toLocaleString('pt-br', {
+                          style: 'currency',
+                          currency: 'BRL',
+                          maximumFractionDigits: 0,
+                        })}
+                      </p>
+                    )}
 
                   <p className="price">
                     {(router.query.toRent === 'true'

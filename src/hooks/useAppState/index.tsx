@@ -6,7 +6,13 @@ import {
   useContext,
   useState,
 } from 'react';
-import { Configurations, EnumItem, House, HouseFilters } from '../useApi/types';
+import {
+  Configurations,
+  EnumItem,
+  Enums,
+  House,
+  HouseFilters,
+} from '../useApi/types';
 
 export interface Filters
   extends Omit<
@@ -38,9 +44,6 @@ interface IAppState {
     setFilters: Dispatch<SetStateAction<Filters>>;
     setCity: Dispatch<SetStateAction<string>>;
     setToRent: Dispatch<SetStateAction<boolean>>;
-    setCities: Dispatch<SetStateAction<string[]>>;
-    setTypes: Dispatch<SetStateAction<EnumItem[]>>;
-    setStatus: Dispatch<SetStateAction<EnumItem[]>>;
     setSelectedHouse: Dispatch<SetStateAction<House>>;
   };
 }
@@ -50,8 +53,15 @@ const AppContext = createContext({} as IAppState);
 interface AppProviderProps {
   children: ReactNode;
   configs: Configurations;
+  enums: Enums;
+  cities: string[];
 }
-export const AppProvider = ({ children, configs }: AppProviderProps) => {
+export const AppProvider = ({
+  children,
+  configs,
+  enums,
+  cities,
+}: AppProviderProps) => {
   const [filters, setFilters] = useState({
     minPrice: '',
     maxPrice: '',
@@ -60,9 +70,6 @@ export const AppProvider = ({ children, configs }: AppProviderProps) => {
   } as Filters);
   const [city, setCity] = useState('');
   const [toRent, setToRent] = useState(true);
-  const [cities, setCities] = useState<string[]>([]);
-  const [types, setTypes] = useState<EnumItem[]>([]);
-  const [status, setStatus] = useState<EnumItem[]>([]);
   const [selectedHouse, setSelectedHouse] = useState<House>();
 
   return (
@@ -73,8 +80,8 @@ export const AppProvider = ({ children, configs }: AppProviderProps) => {
           city,
           toRent,
           cities,
-          types,
-          status,
+          types: enums.types,
+          status: enums.status,
           selectedHouse,
           configs,
         },
@@ -82,9 +89,6 @@ export const AppProvider = ({ children, configs }: AppProviderProps) => {
           setFilters,
           setCity,
           setToRent,
-          setCities,
-          setTypes,
-          setStatus,
           setSelectedHouse,
         },
       }}

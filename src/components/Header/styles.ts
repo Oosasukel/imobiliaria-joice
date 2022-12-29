@@ -24,6 +24,7 @@ export const Container = styled.header`
     @media (min-width: 600px) {
       display: flex;
       gap: 64px;
+      align-items: center;
 
       a {
         color: #000000;

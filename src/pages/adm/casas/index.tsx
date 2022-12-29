@@ -1,12 +1,12 @@
 import { getCookie } from 'cookies-next';
 import { NextPage } from 'next';
-import { Casa } from '../../../pageComponents/adm/Casa';
+import { Casas } from '../../../pageComponents/Casas';
 
-const CasaAdmPage: NextPage = () => {
-  return <Casa />;
+const CasasAdmPage: NextPage = () => {
+  return <Casas admVersion={true} />;
 };
 
-CasaAdmPage.getInitialProps = async ({ req, res }) => {
+CasasAdmPage.getInitialProps = async ({ req, res }) => {
   const loggedCookie = getCookie('logged', { req, res });
 
   if (!loggedCookie) {
@@ -21,4 +21,4 @@ CasaAdmPage.getInitialProps = async ({ req, res }) => {
   return {};
 };
 
-export default CasaAdmPage;
+export default CasasAdmPage;

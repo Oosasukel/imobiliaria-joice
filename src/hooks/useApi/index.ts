@@ -41,8 +41,6 @@ export const useApi = () => {
 
   const createHouse = useCallback((house: CreateHouse) => {
     const formData = new FormData();
-    formData.append('id', house.id);
-    formData.append('type', house.type);
     formData.append('city', house.city);
     formData.append('district', house.district);
     formData.append('street', house.street);
@@ -63,7 +61,7 @@ export const useApi = () => {
     formData.append('aboutTheCondominium', house.aboutTheCondominium);
     formData.append('admComments', house.admComments);
     formData.append('statusId', house.statusId);
-    house.images.forEach((image) => {
+    house.imagesToAdd.forEach((image) => {
       formData.append('images', image);
     });
 
@@ -80,8 +78,6 @@ export const useApi = () => {
 
   const editHouse = useCallback((house: EditHouse) => {
     const formData = new FormData();
-    formData.append('id', house.id);
-    formData.append('type', house.type);
     formData.append('city', house.city);
     formData.append('district', house.district);
     formData.append('street', house.street);
@@ -102,14 +98,14 @@ export const useApi = () => {
     formData.append('aboutTheCondominium', house.aboutTheCondominium);
     formData.append('admComments', house.admComments);
     formData.append('statusId', house.statusId);
-    house.images.forEach((image) => {
+    house.imagesToAdd.forEach((image) => {
       formData.append('images', image);
     });
     house.imagesToRemove.forEach((imageToRemove) => {
       formData.append('imagesToRemove', imageToRemove);
     });
 
-    return api.patch<House>('/api/houses', formData, {
+    return api.patch<House>(`/api/houses/${house.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
