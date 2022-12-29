@@ -107,10 +107,6 @@ export const Casa = () => {
         toSell: String(data.toSell),
         toRent: String(data.toRent),
         furnished: String(data.furnished),
-
-        // toSell: data.toSell ? (['toSell'] as any) : '',
-        // toRent: data.toRent ? (['toRent'] as any) : '',
-        // furnished: data.furnished ? (['furnished'] as any) : '',
       }));
       setCity({ label: data.city, value: data.city });
       setLoading(false);
@@ -267,7 +263,11 @@ export const Casa = () => {
                 <S.Flex>
                   {house.images.map((image) => (
                     <div className="image-container" key={image.referenceUrl}>
-                      <img src={image.url} alt="imagem da casa" />
+                      <img
+                        className="imgGalery"
+                        src={image.url}
+                        alt="imagem da casa"
+                      />
                       <img
                         onClick={() => handleRemoveOldImage(image.referenceUrl)}
                         className="remove-image"
@@ -402,7 +402,6 @@ export const Casa = () => {
                   <div className="chekbox">
                     <input
                       defaultChecked={house.furnished === 'true'}
-                      className="input"
                       type={'checkbox'}
                       name="furnished"
                       onChange={handleChange}
@@ -416,7 +415,6 @@ export const Casa = () => {
                   <div className="chekbox">
                     <input
                       defaultChecked={house.toRent === 'true'}
-                      className="input"
                       type={'checkbox'}
                       name="toRent"
                       onChange={handleChange}
@@ -441,7 +439,6 @@ export const Casa = () => {
                   <div className="chekbox">
                     <input
                       defaultChecked={house.toSell === 'true'}
-                      className="input"
                       type={'checkbox'}
                       name="toSell"
                       onChange={handleChange}

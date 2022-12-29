@@ -9,12 +9,16 @@ export const Galery = styled.div`
 export const Flex = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 8px;
 
   .image-container {
     position: relative;
+    overflow: hidden;
+    border: #dcdcdc solid 2px;
+    border-radius: 8px;
+    height: 90px;
   }
 
   .remove-image {
@@ -35,9 +39,10 @@ export const Flex = styled.div`
     position: absolute;
   }
 
-  img {
+  .imgGalery {
+    object-fit: cover;
     width: 100%;
-    height: 90px;
+    height: 100%;
   }
 
   label {
@@ -47,14 +52,57 @@ export const Flex = styled.div`
     border: 2px dashed #dcdcdc;
     border-radius: 8px;
     cursor: pointer;
+    height: 90px;
+  }
 
-    img {
-      width: 32px;
+  .iconFile {
+    height: 100%;
+    width: 100%;
+  }
+
+  .file {
+    position: absolute;
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 8px;
+
+    .imgGalery {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
     }
 
-    input {
-      position: absolute;
-      display: none;
+    .divGalery {
+      overflow: hidden;
+      border: #dcdcdc solid 2px;
+      border-radius: 8px;
+      height: 90px;
+    }
+
+    label {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      border: 2px dashed #dcdcdc;
+      border-radius: 8px;
+      cursor: pointer;
+      height: 90px;
+
+      .iconFile {
+        height: 100%;
+        width: 100%;
+      }
+
+      .file {
+        position: absolute;
+        display: none;
+      }
     }
   }
 `;
@@ -70,16 +118,6 @@ export const Valor = styled.div`
     gap: 8px;
     align-items: center;
     margin-top: 16px;
-  }
-
-  .input {
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
-  }
-
-  label {
-    cursor: pointer;
   }
 `;
 
@@ -111,11 +149,6 @@ export const Grid = styled.div`
       gap: 8px;
       margin-top: 16px;
     }
-
-    .input {
-      width: 24px;
-      height: 24px;
-    }
   }
 
   display: flex;
@@ -126,11 +159,6 @@ export const Grid = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-
-  .input {
-    width: 24px;
-    height: 24px;
   }
 `;
 

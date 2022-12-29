@@ -35,7 +35,7 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 32px 0;
+  margin: 16px 0;
 
   p {
     color: #747474;
@@ -45,18 +45,30 @@ export const Content = styled.div`
 
   @media (min-width: 600px) {
     gap: 32px;
+    margin: 32px 0;
   }
 `;
 
 export const Title = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  h1 {
+    font-size: 16px;
+    font-weight: 700;
+  }
 
   h2 {
     font-size: 16px;
     font-weight: 700;
     color: #000000;
+  }
+
+  @media (min-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h1 {
+      font-size: 32px;
+    }
   }
 `;
 
@@ -99,13 +111,19 @@ export const Contact = styled.div`
   }
 
   .aluguel {
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 700;
     color: #000000;
   }
 
   .iptu {
     margin-bottom: 16px;
+  }
+
+  @media (min-width: 600px) {
+    .aluguel {
+      font-size: 32px;
+    }
   }
 `;
 
