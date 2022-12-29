@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { Formik } from 'formik';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from '../../../components/Button';
 import { Card } from '../../../components/Card';
 import { Input } from '../../../components/Input';
@@ -15,54 +15,14 @@ export const Configs = () => {
     state: { configs },
   } = useAppState();
   const { setConfigurations } = useApi();
-  const [imagePreview, setImagePreview] = useState(configs.perfilImageUrl);
   const [loading, setLoading] = useState(false);
-
-  const imageToPreviewImage = useCallback((imageToConvert: File): string => {
-    return URL.createObjectURL(imageToConvert);
-  }, []);
-
-  const toDataURL = useCallback((url, callback) => {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      var reader = new FileReader();
-      reader.onloadend = function () {
-        callback(reader.result);
-      };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.send();
-  }, []);
-
-  const handleSelectImage = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (!event.target.files && !event.target.files.length) {
-        return;
-      }
-
-      const selectedImages = Array.from(event.target.files);
-      if (selectedImages.length) {
-        const selectedImage = selectedImages[0];
-
-        const fileString = imageToPreviewImage(selectedImage);
-        toDataURL(fileString, (base64) => {
-          setImagePreview(base64);
-        });
-      } else {
-        setImagePreview('');
-      }
-    },
-    [imageToPreviewImage, toDataURL]
-  );
 
   const handleSubmit = useCallback(
     async (values: Configurations) => {
       setLoading(true);
 
       try {
-        await setConfigurations({ ...values, perfilImageUrl: imagePreview });
+        await setConfigurations({ ...values, perfilImageUrl: '' });
       } catch (error) {
         console.error(error);
         alert('Algo deu errado ao salvar as configurações.');
@@ -70,7 +30,7 @@ export const Configs = () => {
         setLoading(false);
       }
     },
-    [imagePreview, setConfigurations]
+    [setConfigurations]
   );
 
   return (
@@ -113,27 +73,6 @@ export const Configs = () => {
                       placeholder="+5515997979797"
                     />
                   </div>
-
-                  <label className="preview-image-container">
-                    <span>Imagem de perfil</span>
-                    <div className="image-wrapper">
-                      <img
-                        src={
-                          imagePreview
-                            ? imagePreview
-                            : '/images/no-profile-image.png'
-                        }
-                        alt="preview da imagem de perfil"
-                      />
-                    </div>
-
-                    <Input
-                      onChange={handleSelectImage}
-                      className="img"
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                    />
-                  </label>
 
                   <Button loading={loading} type="submit" variant="fourth">
                     Salvar alterações
