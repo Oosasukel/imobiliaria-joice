@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Select from 'react-select';
 import { Button } from '../../../components/Button';
-import { Card } from '../../../components/Card';
 import { Input } from '../../../components/Input';
 import { Layout } from '../../../components/Layout';
 import { Loading } from '../../../components/Loading';
@@ -258,13 +257,13 @@ export const Casa = () => {
       <Formik initialValues={house} onSubmit={handleSubmit}>
         {({ values, handleChange }) => (
           <Form>
-            <Card>
+            <S.Container>
               <S.Galery>
                 <S.Flex>
                   {house.images.map((image) => (
                     <div className="image-container" key={image.referenceUrl}>
                       <img
-                        className="imgGalery"
+                        className="img-galery"
                         src={image.url}
                         alt="imagem da casa"
                       />
@@ -279,7 +278,11 @@ export const Casa = () => {
 
                   {previewImages.map((image, index) => (
                     <div className="image-container" key={index}>
-                      <img src={image} alt="imagem da casa" />
+                      <img
+                        className="img-galery"
+                        src={image}
+                        alt="imagem da casa"
+                      />
                       <img
                         onClick={() => handleRemoveImage(index)}
                         className="remove-image"
@@ -289,11 +292,12 @@ export const Casa = () => {
                     </div>
                   ))}
 
-                  <label>
-                    <img src="/icons/+.svg" alt="" />
+                  <label className="input-file-container">
+                    <img className="icon-file" src="/icons/+.svg" alt="" />
 
                     <Input
                       accept="image/png, image/gif, image/jpeg"
+                      className="file"
                       onChange={handleSelectImages}
                       type="file"
                       multiple
@@ -404,10 +408,11 @@ export const Casa = () => {
                       defaultChecked={house.furnished === 'true'}
                       type={'checkbox'}
                       name="furnished"
+                      id="furnished-checkbox"
                       onChange={handleChange}
                       value="furnished"
                     />
-                    <label>Mobiliada</label>
+                    <label htmlFor="furnished-checkbox">Mobiliada</label>
                   </div>
                 </S.Grid>
 
@@ -417,10 +422,11 @@ export const Casa = () => {
                       defaultChecked={house.toRent === 'true'}
                       type={'checkbox'}
                       name="toRent"
+                      id="to-rent-checkbox"
                       onChange={handleChange}
                       value="toRent"
                     />
-                    <label>Aluguel</label>
+                    <label htmlFor="to-rent-checkbox">Aluguel</label>
                   </div>
 
                   <div className="valor">
@@ -441,10 +447,11 @@ export const Casa = () => {
                       defaultChecked={house.toSell === 'true'}
                       type={'checkbox'}
                       name="toSell"
+                      id="to-sell-checkbox"
                       onChange={handleChange}
                       value="toSell"
                     />
-                    <label>Venda</label>
+                    <label htmlFor="to-sell-checkbox">Venda</label>
                   </div>
 
                   <div className="valor">
@@ -557,7 +564,7 @@ export const Casa = () => {
                   </>
                 )}
               </S.Conteudo>
-            </Card>
+            </S.Container>
           </Form>
         )}
       </Formik>

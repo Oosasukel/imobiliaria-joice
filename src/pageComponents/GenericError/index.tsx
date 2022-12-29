@@ -3,20 +3,22 @@ import { Button } from '../../components/Button';
 import { Layout } from '../../components/Layout';
 import * as S from './styles';
 
-export const Erro = () => {
+interface GenericErrorProps {
+  // eslint-disable-next-line no-undef
+  message: string | JSX.Element;
+}
+
+export const GenericError = ({ message }: GenericErrorProps) => {
   return (
     <Layout>
       <S.CardContainer>
         <div className="flex">
           <div>
-            <h1>Algo deu errado ☹️</h1>
-            <h1>Tente novamente ou nos envie uma mensagem</h1>
-            <h1></h1>
+            <h1>{message}</h1>
           </div>
-
           <div>
             <Button>
-              <a href="/"> Inicio </a>
+              <a href="/">Inicio</a>
             </Button>
           </div>
         </div>

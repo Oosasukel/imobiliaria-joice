@@ -1,20 +1,24 @@
-import { ReactNode } from 'react';
+import { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 import * as S from './styles';
 
-interface CardProps {
+interface CardProps
+  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   children: ReactNode;
-  className?: string;
   showOnMobile?: boolean;
 }
 
 export const Card = ({
   children,
-  className,
   showOnMobile = true,
+  // eslint-disable-next-line no-unused-vars
+  ref,
+  ...rest
 }: CardProps) => {
   return (
-    <S.Container showOnMobile={showOnMobile} className={className}>
+    <S.Container showOnMobile={showOnMobile} {...rest}>
       {children}
+
+      <div></div>
     </S.Container>
   );
 };

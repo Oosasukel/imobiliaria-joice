@@ -1,7 +1,7 @@
-import { NotFound } from '../pageComponents/NotFound';
+import { GenericError } from '../pageComponents/GenericError';
 
 const NotFoundPage = () => {
-  return <NotFound />;
+  return <GenericError message="Página não encontrada" />;
 };
 
 export default NotFoundPage;

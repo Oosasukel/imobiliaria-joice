@@ -1,6 +1,6 @@
 import { GenericError } from '../pageComponents/GenericError';
 
-const ErroPage = () => {
+const Error500Page = () => {
   return (
     <GenericError
       message={
@@ -14,4 +14,4 @@ const ErroPage = () => {
   );
 };
 
-export default ErroPage;
+export default Error500Page;
