@@ -22,6 +22,7 @@ export const Casa = () => {
   } = useAppState();
   const router = useRouter();
   const [house, setHouse] = useState<House>();
+  const [notFound, setNotFound] = useState(false);
   const toRent = useMemo(
     () => (router.query.toRent ? router.query.toRent === 'true' : undefined),
     [router.query.toRent]
@@ -45,19 +46,27 @@ export const Casa = () => {
     if (!router.isReady) return;
 
     const fetchHouse = async () => {
-      if (selectedHouse) {
-        setHouse(selectedHouse);
-      } else {
-        const { data } = await getHouse(router.query.id as string);
-        setHouse(data);
-      }
+      try {
+        if (selectedHouse) {
+          setHouse(selectedHouse);
+        } else {
+          const { data } = await getHouse(router.query.id as string);
+          setHouse(data);
+        }
 
-      setLoading(false);
+        setLoading(false);
+      } catch (error) {
+        if (error?.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          return router.push('/erro');
+        }
+      }
     };
 
     setLoading(true);
     fetchHouse();
-  }, [getHouse, router.isReady, router.query, selectedHouse]);
+  }, [getHouse, router, selectedHouse]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -76,6 +85,13 @@ export const Casa = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  if (notFound)
+    return (
+      <Layout>
+        <h1>Imóvel não encontrado.</h1>
+      </Layout>
+    );
 
   if (loading) return <Loading />;
 

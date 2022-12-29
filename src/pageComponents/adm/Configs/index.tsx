@@ -5,6 +5,8 @@ import { Button } from '../../../components/Button';
 import { Card } from '../../../components/Card';
 import { Input } from '../../../components/Input';
 import { Layout } from '../../../components/Layout';
+import { useApi } from '../../../hooks/useApi';
+import { Configurations } from '../../../hooks/useApi/types';
 import { useAppState } from '../../../hooks/useAppState';
 import * as S from './styles';
 
@@ -12,14 +14,15 @@ export const Configs = () => {
   const {
     state: { configs },
   } = useAppState();
+  const { setConfigurations } = useApi();
   const [imagePreview, setImagePreview] = useState(configs.perfilImageUrl);
+  const [loading, setLoading] = useState(false);
 
   const imageToPreviewImage = useCallback((imageToConvert: File): string => {
     return URL.createObjectURL(imageToConvert);
   }, []);
 
   const toDataURL = useCallback((url, callback) => {
-    // @TODO ajustar essa função
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
       var reader = new FileReader();
@@ -39,27 +42,42 @@ export const Configs = () => {
         return;
       }
 
-      const file = event.target.files.item(0);
+      const selectedImages = Array.from(event.target.files);
+      if (selectedImages.length) {
+        const selectedImage = selectedImages[0];
 
-      const fileString = imageToPreviewImage(file);
-      toDataURL(fileString, (base64) => {
-        setImagePreview(base64);
-      });
+        const fileString = imageToPreviewImage(selectedImage);
+        toDataURL(fileString, (base64) => {
+          setImagePreview(base64);
+        });
+      } else {
+        setImagePreview('');
+      }
     },
-    [imageToPreviewImage]
+    [imageToPreviewImage, toDataURL]
+  );
+
+  const handleSubmit = useCallback(
+    async (values: Configurations) => {
+      setLoading(true);
+
+      try {
+        await setConfigurations({ ...values, perfilImageUrl: imagePreview });
+      } catch (error) {
+        console.error(error);
+        alert('Algo deu errado ao salvar as configurações.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [imagePreview, setConfigurations]
   );
 
   return (
     <Layout admVersion={true}>
-      <Formik
-        initialValues={configs}
-        onSubmit={(values) => {
-          console.log('values', values);
-          console.log('imagePreview', imagePreview);
-        }}
-      >
-        {({ values, handleChange, handleSubmit }) => (
-          <S.Container onSubmit={handleSubmit}>
+      <Formik initialValues={configs} onSubmit={handleSubmit}>
+        {({ values, handleChange, handleSubmit: handleSubmitFormik }) => (
+          <S.Container onSubmit={handleSubmitFormik}>
             <S.ContainerCard>
               <Card>
                 <S.Flex>
@@ -105,7 +123,7 @@ export const Configs = () => {
                             ? imagePreview
                             : '/images/no-profile-image.png'
                         }
-                        alt=""
+                        alt="preview da imagem de perfil"
                       />
                     </div>
 
@@ -113,11 +131,11 @@ export const Configs = () => {
                       onChange={handleSelectImage}
                       className="img"
                       type="file"
-                      id=""
+                      accept="image/png, image/gif, image/jpeg"
                     />
                   </label>
 
-                  <Button type="submit" variant="fourth">
+                  <Button loading={loading} type="submit" variant="fourth">
                     Salvar alterações
                   </Button>
                 </S.Flex>

@@ -29,23 +29,29 @@ export const Casas = ({ admVersion }: CasasProps) => {
     async (query: any) => {
       setLoading(true);
 
-      const {
-        data: { data, nextId },
-      } = await (admVersion ? getAdmHouses : getHouses)({
-        ...query,
-        initialId,
-        maxRentPrice: query.toRent === 'true' ? query.maxPrice : undefined,
-        minRentPrice: query.toRent === 'true' ? query.minPrice : undefined,
-        maxSellPrice: query.toRent === 'true' ? undefined : query.maxPrice,
-        minSellPrice: query.toRent === 'true' ? undefined : query.minPrice,
-        pageSize: '12',
-      });
-      setInitialId(nextId);
-      setHouses(data);
+      try {
+        const {
+          data: { data, nextId },
+        } = await (admVersion ? getAdmHouses : getHouses)({
+          ...query,
+          initialId,
+          maxRentPrice: query.toRent === 'true' ? query.maxPrice : undefined,
+          minRentPrice: query.toRent === 'true' ? query.minPrice : undefined,
+          maxSellPrice: query.toRent === 'true' ? undefined : query.maxPrice,
+          minSellPrice: query.toRent === 'true' ? undefined : query.minPrice,
+          pageSize: '12',
+        });
+        setInitialId(nextId);
+        setHouses(data);
 
-      setLoading(false);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+
+        router.push('/erro');
+      }
     },
-    [admVersion, getAdmHouses, getHouses, initialId]
+    [admVersion, getAdmHouses, getHouses, initialId, router]
   );
 
   useEffect(() => {

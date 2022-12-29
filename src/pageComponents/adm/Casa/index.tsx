@@ -22,6 +22,7 @@ export const Casa = () => {
   } = useAppState();
   const { getAdmHouse, createHouse, editHouse, deleteHouse } = useApi();
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [house, setHouse] = useState<EditHouse>({
     city: '',
     district: '',
@@ -86,33 +87,41 @@ export const Casa = () => {
     }
 
     const fetchHouse = async () => {
-      const { data } = await getAdmHouse(router.query.id as string);
+      try {
+        const { data } = await getAdmHouse(router.query.id as string);
 
-      setHouse((prev) => ({
-        ...prev,
-        ...data,
-        typeId: String(data.typeId),
-        squareMeters: String(data.squareMeters),
-        bedrooms: String(data.bedrooms),
-        suites: String(data.suites),
-        bathrooms: String(data.bathrooms),
-        parkingSpaces: String(data.parkingSpaces),
-        rentPrice: String(data.rentPrice),
-        sellPrice: String(data.sellPrice),
-        condominiumPrice: String(data.condominiumPrice),
-        iptuPrice: String(data.iptuPrice),
-        statusId: String(data.statusId),
+        setHouse((prev) => ({
+          ...prev,
+          ...data,
+          typeId: String(data.typeId),
+          squareMeters: String(data.squareMeters),
+          bedrooms: String(data.bedrooms),
+          suites: String(data.suites),
+          bathrooms: String(data.bathrooms),
+          parkingSpaces: String(data.parkingSpaces),
+          rentPrice: String(data.rentPrice),
+          sellPrice: String(data.sellPrice),
+          condominiumPrice: String(data.condominiumPrice),
+          iptuPrice: String(data.iptuPrice),
+          statusId: String(data.statusId),
 
-        toSell: String(data.toSell),
-        toRent: String(data.toRent),
-        furnished: String(data.furnished),
-      }));
-      setCity({ label: data.city, value: data.city });
-      setLoading(false);
+          toSell: String(data.toSell),
+          toRent: String(data.toRent),
+          furnished: String(data.furnished),
+        }));
+        setCity({ label: data.city, value: data.city });
+        setLoading(false);
+      } catch (error) {
+        if (error?.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          return router.push('/erro');
+        }
+      }
     };
 
     fetchHouse();
-  }, [getAdmHouse, router.isReady, router.query.id]);
+  }, [getAdmHouse, router]);
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
@@ -249,6 +258,13 @@ export const Casa = () => {
       }
     }
   }, [deleteHouse, house.id, router]);
+
+  if (notFound)
+    return (
+      <Layout admVersion={true}>
+        <h1>Imóvel não encontrado.</h1>
+      </Layout>
+    );
 
   if (loading) return <Loading />;
 
