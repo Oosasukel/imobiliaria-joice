@@ -104,6 +104,27 @@ export const ConteudoCard = styled.div`
     font-weight: 700;
     color: #000000;
   }
+
+  .container-badge {
+    display: flex;
+    justify-content: end;
+  }
+`;
+
+export const Badge = styled.span`
+  /* background: #eee; */
+  background: #d8f3eb;
+  font-size: 14px;
+  /* border: 1px solid #bbb; */
+  border: 1px solid #36b08b;
+  font-weight: 700;
+  /* color: #666; */
+  color: #24755d;
+  padding: 6px;
+  border-radius: 16px;
+  display: block;
+  width: min-content;
+  white-space: nowrap;
 `;
 
 export const Endereco = styled.div`
