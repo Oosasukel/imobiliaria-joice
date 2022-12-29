@@ -169,9 +169,13 @@ export const Casas = ({ admVersion }: CasasProps) => {
                       maximumFractionDigits: 0,
                     })}
                   </p>
-                  <div className="container-badge">
-                    <S.Badge>Disponivel</S.Badge>
-                  </div>
+                  {!!admVersion && (
+                    <div className="container-badge">
+                      <S.Badge available={house.statusId === 2}>
+                        {house.status}
+                      </S.Badge>
+                    </div>
+                  )}
                 </S.ConteudoCard>
               </S.Card>
             ))}

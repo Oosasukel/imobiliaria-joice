@@ -111,15 +111,16 @@ export const ConteudoCard = styled.div`
   }
 `;
 
-export const Badge = styled.span`
-  /* background: #eee; */
-  background: #d8f3eb;
+interface BadgeProps {
+  available?: boolean;
+}
+
+export const Badge = styled.span<BadgeProps>`
+  background: ${({ available }) => (available ? '#d8f3eb' : '#eee')};
   font-size: 14px;
-  /* border: 1px solid #bbb; */
-  border: 1px solid #36b08b;
+  border: 1px solid ${({ available }) => (available ? '#36b08b' : '#bbb')};
   font-weight: 700;
-  /* color: #666; */
-  color: #24755d;
+  color: ${({ available }) => (available ? '#24755d' : '#666')};
   padding: 6px;
   border-radius: 16px;
   display: block;
