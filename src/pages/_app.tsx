@@ -1,9 +1,7 @@
-import { getCookie, setCookie } from 'cookies-next';
 import App, { AppContext, AppProps as NextAppProps } from 'next/app';
 import Head from 'next/head';
 import { Configurations, Enums } from '../hooks/useApi/types';
 import { AppProvider } from '../hooks/useAppState';
-import { api } from '../services/api';
 import { GlobalCSS } from '../styles/global';
 
 interface AppProps extends NextAppProps {
@@ -32,44 +30,11 @@ const CustomApp = ({
 };
 
 CustomApp.getInitialProps = async (context: AppContext) => {
-  let configs: Configurations;
-  let enums: Enums;
-  let cities: string[];
+  let configs = { phoneNumber: '' } as Configurations;
+  let enums: Enums = { status: [], types: [] };
+  let cities: string[] = [];
 
-  const {
-    ctx: { req, res },
-  } = context;
   const ctx = await App.getInitialProps(context);
-
-  const cookieConfigs = getCookie('configs', { req, res });
-  const cookieEnums = getCookie('enums', { req, res });
-  const cookieCities = getCookie('cities', { req, res });
-
-  if (cookieConfigs && cookieEnums && cookieCities) {
-    configs = JSON.parse(cookieConfigs as string);
-    enums = JSON.parse(cookieEnums as string);
-    cities = JSON.parse(cookieCities as string);
-  } else {
-    const { data: configsResponse } = await api.get<Configurations>(
-      '/api/configurations'
-    );
-    const { data: enumsResponse } = await api.get<Enums>('/api/enums');
-    const { data: citiesResponse } = await api.get<string[]>('/api/cities');
-    configs = configsResponse;
-    enums = enumsResponse;
-    cities = citiesResponse;
-
-    const expires = new Date();
-    expires.setMinutes(expires.getMinutes() + 30);
-
-    setCookie('configs', JSON.stringify(configsResponse), {
-      req,
-      res,
-      expires,
-    });
-    setCookie('enums', JSON.stringify(enumsResponse), { req, res, expires });
-    setCookie('cities', JSON.stringify(citiesResponse), { req, res, expires });
-  }
 
   return { ...ctx, configs, enums, cities } as AppProps;
 };
