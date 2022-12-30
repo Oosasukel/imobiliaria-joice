@@ -110,6 +110,7 @@ export const Casa = () => {
           furnished: String(data.furnished),
         }));
         setCity({ label: data.city, value: data.city });
+        setTypeSelected({ label: data.type, value: data.typeId });
         setLoading(false);
       } catch (error) {
         if (error?.response?.status === 404) {
@@ -244,17 +245,24 @@ export const Casa = () => {
   }, [router]);
 
   const handleRemove = useCallback(async () => {
-    if (house.id) {
-      setSubmitting(true);
+    if (
+      house.id &&
+      confirm(
+        'Quer mesmo excluir esta casa? Esta ação não poderá ser desfeita.'
+      )
+    ) {
+      if (house.id) {
+        setSubmitting(true);
 
-      try {
-        await deleteHouse(house.id);
+        try {
+          await deleteHouse(house.id);
 
-        return router.push('/adm/casas');
-      } catch (error) {
-        setSubmitting(false);
-        console.error(error);
-        alert('Houve um erro ao excluir esta casa');
+          return router.push('/adm/casas');
+        } catch (error) {
+          setSubmitting(false);
+          console.error(error);
+          alert('Houve um erro ao excluir esta casa');
+        }
       }
     }
   }, [deleteHouse, house.id, router]);
