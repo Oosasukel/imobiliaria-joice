@@ -7,7 +7,6 @@ import nc from 'next-connect';
 import { v4 as uuid } from 'uuid';
 import { houseStatus, houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
-import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 import { storage } from '../../../api/services/firebase';
@@ -15,7 +14,6 @@ import { House, HouseFilters, HouseResponseDTO } from '../../../api/types';
 
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
-handler.use(ironSession);
 handler.get(async (req, res) => {
   const { query } = req;
   const filters: HouseFilters = {
@@ -35,7 +33,7 @@ handler.get(async (req, res) => {
     minSquareMeters: Number(query.minSquareMeters) || undefined,
     maxSquareMeters: Number(query.maxSquareMeters) || undefined,
     toRent: query.toRent ? query.toRent === 'true' : true,
-    statusId: req.session.user ? undefined : 2,
+    statusId: 2,
   };
 
   try {
