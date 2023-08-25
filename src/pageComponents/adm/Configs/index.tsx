@@ -22,7 +22,11 @@ export const Configs = () => {
       setLoading(true);
 
       try {
-        await setConfigurations({ ...values, perfilImageUrl: '' });
+        await setConfigurations({
+          ...values,
+          phoneNumber: values.phoneNumber.toString(),
+          perfilImageUrl: '',
+        });
       } catch (error) {
         console.error(error);
         alert('Algo deu errado ao salvar as configurações.');
