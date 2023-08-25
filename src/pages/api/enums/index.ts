@@ -6,7 +6,7 @@ import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 const handler = nc<NextApiRequest, NextApiResponse>(defaultOptions);
 
 handler.get(async (req, res) => {
-  const types = [];
+  const types: any[] = [];
   for (const id in houseTypes) {
     types.push({
       id: Number(id),
@@ -14,7 +14,7 @@ handler.get(async (req, res) => {
     });
   }
 
-  const status = [];
+  const status: any[] = [];
   for (const id in houseStatus) {
     status.push({
       id: Number(id),

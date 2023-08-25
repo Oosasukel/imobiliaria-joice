@@ -20,9 +20,12 @@ export const Header = ({ admVersion }: HeaderProps) => {
     if (admVersion)
       return (
         <>
-          <Link href={'/adm/casas'}>Imóveis</Link>
+          <Link href={'/adm/casas?toRent=true'}>Imóveis para aluguel</Link>
 
-          <Link href="/adm/configs">Configurações</Link>
+          <Link href={'/adm/casas?toRent=false'}>Imóveis para venda</Link>
+
+          {/* <Link href={'/adm/casas'}>Imóveis</Link> */}
+          {/* <Link href="/adm/configs">Configurações</Link> */}
 
           <Link href="/adm/casa">
             <Button variant="fourth">Nova Casa</Button>

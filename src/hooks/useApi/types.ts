@@ -81,6 +81,7 @@ export interface House {
   admComments?: string;
   statusId: number;
   images: ImageItem[];
+  phoneNumber: string;
 }
 
 export interface ImageItem {

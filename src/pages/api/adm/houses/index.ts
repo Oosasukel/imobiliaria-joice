@@ -31,6 +31,7 @@ handler.get(async (req, res) => {
     minSquareMeters: Number(query.minSquareMeters) || undefined,
     maxSquareMeters: Number(query.maxSquareMeters) || undefined,
     toRent: query.toRent ? query.toRent === 'true' : true,
+    createdBy: req.session.user.email,
   };
 
   try {

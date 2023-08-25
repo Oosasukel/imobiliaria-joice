@@ -233,6 +233,14 @@ const create = async () => {
                             q.Select(['maxSquareMeters'], q.Var('filterParams'))
                           ),
                           true
+                        ),
+                        q.If(
+                          q.ContainsField('createdBy', q.Var('filterParams')),
+                          q.Equals(
+                            q.Select(['data', 'createdBy'], q.Var('p')),
+                            q.Select(['createdBy'], q.Var('filterParams'))
+                          ),
+                          true
                         )
                       )
                     )

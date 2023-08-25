@@ -59,7 +59,7 @@ export const Search = ({ onSubmit, loading }: SearchProps) => {
               <Select
                 defaultValue={city ? { value: city, label: city } : undefined}
                 options={selectCities}
-                onChange={(newValue) => setCity(newValue.value)}
+                onChange={(newValue) => setCity(newValue?.value || '')}
                 classNamePrefix="react-select"
                 className="react-select-container"
                 placeholder="Busque por cidade"

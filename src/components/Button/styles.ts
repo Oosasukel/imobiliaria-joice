@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 interface StyledButtonProps {
   variant: 'primary' | 'secondary' | 'thirdy' | 'fourth';
-  width: string;
+  width?: string;
 }
 
 export const StyledButton = styled.button<StyledButtonProps>`

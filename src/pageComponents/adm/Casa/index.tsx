@@ -56,10 +56,13 @@ export const Casa = () => {
     () => types.map((item) => ({ value: item.id, label: item.name })),
     [types]
   );
-  const [typeSelected, setTypeSelected] = useState<{
-    value: number;
-    label: string;
-  }>(typesSelect.length ? typesSelect[0] : undefined);
+  const [typeSelected, setTypeSelected] = useState<
+    | {
+        value: number;
+        label: string;
+      }
+    | undefined
+  >(typesSelect.length ? typesSelect[0] : undefined);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -193,8 +196,8 @@ export const Casa = () => {
           // Edit
           await editHouse({
             ...values,
-            city: city?.value,
-            typeId: String(typeSelected.value),
+            city: city?.value || '',
+            typeId: String(typeSelected?.value),
             furnished: String(!!values.furnished.length),
             toRent: String(!!values.toRent.length),
             toSell: String(!!values.toSell.length),
@@ -206,8 +209,8 @@ export const Casa = () => {
           // Create
           const { data } = await createHouse({
             ...values,
-            city: city?.value,
-            typeId: String(typeSelected.value),
+            city: city?.value || '',
+            typeId: String(typeSelected?.value),
             furnished: String(!!values.furnished.length),
             toRent: String(!!values.toRent.length),
             toSell: String(!!values.toSell.length),
@@ -217,7 +220,7 @@ export const Casa = () => {
           id = data.id;
         }
 
-        return router.push(`/casa/${id}`);
+        return router.push('/adm/casas');
       } catch (error) {
         setSubmitting(false);
         console.error(error);
@@ -232,7 +235,7 @@ export const Casa = () => {
       house.imagesToAdd,
       house.imagesToRemove,
       router,
-      typeSelected.value,
+      typeSelected?.value,
     ]
   );
 

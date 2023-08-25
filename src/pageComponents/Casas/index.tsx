@@ -64,7 +64,7 @@ export const Casas = ({ admVersion }: CasasProps) => {
   }, [router.isReady, router.query, setFilters]);
 
   const getHouseTags = useCallback((house: House) => {
-    const houseTags = [];
+    const houseTags: any[] = [];
 
     if (house.squareMeters) houseTags.push(`${house.squareMeters} m²`);
     if (house.bedrooms)

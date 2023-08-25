@@ -23,12 +23,14 @@ export interface House {
     referenceUrl: string;
     url: string;
   }>;
+  createdBy: string;
 }
 
 export interface HouseResponseDTO extends House {
   id: string;
   type: string;
   status: string;
+  phoneNumber: string;
 }
 
 export interface HouseFilters {
@@ -49,4 +51,5 @@ export interface HouseFilters {
   maxSquareMeters?: number;
   toRent: boolean;
   statusId?: number;
+  createdBy?: string;
 }

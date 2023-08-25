@@ -7,6 +7,7 @@ import nc from 'next-connect';
 import { v4 as uuid } from 'uuid';
 import { houseStatus, houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
+import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
 import { fauna } from '../../../api/services/fauna';
 import { storage } from '../../../api/services/firebase';
@@ -36,26 +37,33 @@ handler.get(async (req, res) => {
     statusId: 2,
   };
 
-  try {
-    const { data, after } = await fauna.query<any>(
-      q.Call('HouseFilter', filters)
-    );
+  const { data, after } = await fauna.query<any>(
+    q.Call('HouseFilter', filters)
+  );
+  const { data: users } = await fauna.query<any>(
+    q.Map(
+      q.Paginate(q.Documents(q.Collection('Users'))),
+      q.Lambda((x) => q.Get(x))
+    )
+  );
 
-    return res.json({
-      nextId: after ? after[0].id : undefined,
-      data: data.map((house) => ({
-        id: house.ref.id,
-        type: houseTypes[house.data.typeId],
-        status: houseStatus[house.data.statusId],
-        ...house.data,
-        admComments: undefined,
-      })),
-    });
-  } catch (error) {
-    return res.json(error);
-  }
+  return res.json({
+    nextId: after ? after[0].id : undefined,
+    data: data.map((house) => ({
+      id: house.ref.id,
+      type: houseTypes[house.data.typeId],
+      status: houseStatus[house.data.statusId],
+      ...house.data,
+      admComments: undefined,
+      createdBy: undefined,
+      phoneNumber: users.find(
+        (user) => user.data.email === house.data.createdBy
+      )?.data.phoneNumber,
+    })),
+  });
 });
 
+handler.use(ironSession);
 handler.use(auth);
 handler.post(async (req, res) => {
   const form = formidable({ multiples: true });
@@ -95,14 +103,15 @@ handler.post(async (req, res) => {
       admComments: String(fields.admComments),
       statusId: Number(fields.statusId),
       images: [],
+      createdBy: req.session.user.email,
     };
 
     for (const image of images) {
-      const imageExtension = image.originalFilename.split('.').pop();
+      const imageExtension = image.originalFilename?.split('.').pop();
       const imageRef = ref(storage, `housesImages/${uuid()}.${imageExtension}`);
       const imageFile = await fs.readFile(image.filepath);
       await uploadBytes(imageRef, imageFile, {
-        contentType: image.mimetype,
+        contentType: image.mimetype || undefined,
       });
       const imageUrl = await getDownloadURL(imageRef);
       newHouse.images.push({

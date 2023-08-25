@@ -29,13 +29,23 @@ handler.get(async (req, res) => {
     const faunaResponse = await fauna.query<any>(
       q.Get(q.Ref(q.Collection('Houses'), id))
     );
+    const { data: user } = await fauna.query<any>(
+      q.Get(q.Match(q.Index('user_by_email'), faunaResponse.data.createdBy))
+    );
+
     house = {
       id: faunaResponse.ref.id,
       type: houseTypes[faunaResponse.data.typeId],
       status: houseStatus[faunaResponse.data.statusId],
       ...faunaResponse.data,
       admComments: undefined,
+      createdBy: undefined,
+      phoneNumber: user.phoneNumber,
     };
+
+    if (house.statusId !== 2) {
+      return res.status(404).send('casa não encontrada');
+    }
   } catch {
     return res.status(404).send('casa não encontrada');
   }
@@ -53,6 +63,10 @@ handler.delete(async (req, res) => {
       q.Get(q.Ref(q.Collection('Houses'), id))
     );
     house = faunaResponse.data;
+
+    if (house.createdBy !== req.session.user.email) {
+      return res.status(401).send('Não autorizado');
+    }
   } catch {
     return res.status(404).send('casa não encontrada');
   }
@@ -96,6 +110,10 @@ handler.patch(async (req, res) => {
         q.Get(q.Ref(q.Collection('Houses'), id))
       );
       house = faunaResponse.data;
+
+      if (house.createdBy !== req.session.user.email) {
+        return res.status(401).send('Não autorizado');
+      }
     } catch {
       return res.status(404).send('casa não encontrada');
     }
@@ -125,11 +143,11 @@ handler.patch(async (req, res) => {
     };
 
     for (const image of images) {
-      const imageExtension = image.originalFilename.split('.').pop();
+      const imageExtension = image.originalFilename?.split('.').pop();
       const imageRef = ref(storage, `housesImages/${uuid()}.${imageExtension}`);
       const imageFile = await fs.readFile(image.filepath);
       await uploadBytes(imageRef, imageFile, {
-        contentType: image.mimetype,
+        contentType: image.mimetype || undefined,
       });
       const imageUrl = await getDownloadURL(imageRef);
       house.images.push({

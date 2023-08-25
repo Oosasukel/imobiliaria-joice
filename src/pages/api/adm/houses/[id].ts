@@ -26,6 +26,10 @@ handler.get(async (req, res) => {
       status: houseStatus[faunaResponse.data.statusId],
       ...faunaResponse.data,
     };
+
+    if (house.createdBy !== req.session.user.email) {
+      return res.status(401).send('Não autorizado');
+    }
   } catch {
     return res.status(404).send('casa não encontrada');
   }

@@ -9,7 +9,7 @@ export const ironSession = async (
 ) => {
   const ironSessionHandler = ironSessionExpress({
     cookieName: 'imobiliaria-joice',
-    password: process.env.IRON_SESSION_PASSWORD,
+    password: process.env.IRON_SESSION_PASSWORD || '',
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
     },

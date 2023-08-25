@@ -10,6 +10,7 @@ import * as S from '../Login/styles';
 
 export const Login = () => {
   const { login } = useApi();
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -19,10 +20,10 @@ export const Login = () => {
     async (event) => {
       event.preventDefault();
 
-      if (passwordRef.current) {
+      if (passwordRef.current && emailRef.current) {
         try {
           setLoading(true);
-          await login('joice@hotmail.com', passwordRef.current.value);
+          await login(emailRef.current.value, passwordRef.current.value);
 
           const expires = new Date();
           expires.setHours(expires.getHours() + 8);
@@ -48,6 +49,7 @@ export const Login = () => {
       <S.ContainerCard>
         <Card>
           <S.Senha>
+            <Input type="email" ref={emailRef} placeholder="Digite seu email" />
             <Input
               type="password"
               ref={passwordRef}

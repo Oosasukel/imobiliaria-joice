@@ -18,7 +18,7 @@ export const Casa = () => {
   const { getHouse } = useApi();
   const [loading, setLoading] = useState(true);
   const {
-    state: { selectedHouse, configs },
+    state: { selectedHouse },
   } = useAppState();
   const router = useRouter();
   const [house, setHouse] = useState<House>();
@@ -30,7 +30,7 @@ export const Casa = () => {
   const whatsLink = useMemo(
     () =>
       getWhatsAppLink(
-        configs.phoneNumber,
+        house?.phoneNumber,
         `Olá. Estou interessado ${
           toRent === undefined ? 'no' : toRent ? 'em alugar o' : 'em comprar o'
         } seguinte imóvel ${
@@ -39,7 +39,7 @@ export const Casa = () => {
             : ''
         }`
       ),
-    [configs.phoneNumber, toRent]
+    [house?.phoneNumber, toRent]
   );
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const Casa = () => {
       </Layout>
     );
 
-  if (loading) return <Loading />;
+  if (loading || !house) return <Loading />;
 
   return (
     <Layout withMobileBackground={false}>
