@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "next lint",
     "prettier:check": "prettier --check src",
-    "createCollections": "node ./src/api/database/createCollections.js"
+    "createCollections": "node ./src/api/database/createCollections.js",
+    "hashPassword": "node ./src/hashPassword/index.js"
   },
   "dependencies": {
     "axios": "^1.2.1",
