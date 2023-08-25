@@ -25,7 +25,7 @@ handler.post(async (req, res) => {
   let user: User;
   try {
     const { data, ref } = await fauna.query<any>(
-      q.Get(q.Match(q.Index('user_by_email'), email))
+      q.Get(q.Match(q.Index('user_by_email'), (email as string).toLowerCase()))
     );
 
     user = { ...data, id: ref.id };
