@@ -10,7 +10,7 @@ import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 import { v4 as uuid } from 'uuid';
-import { houseTypes } from '../../../api/enums';
+import { houseStatus, houseTypes } from '../../../api/enums';
 import { auth } from '../../../api/middlewares/auth';
 import { ironSession } from '../../../api/middlewares/ironSession';
 import { defaultOptions } from '../../../api/nextConnect/defaultOptions';
@@ -32,10 +32,9 @@ handler.get(async (req, res) => {
     house = {
       id: faunaResponse.ref.id,
       type: houseTypes[faunaResponse.data.typeId],
+      status: houseStatus[faunaResponse.data.statusId],
       ...faunaResponse.data,
-      admComments: req.session.user
-        ? faunaResponse.data.admComments
-        : undefined,
+      admComments: undefined,
     };
   } catch {
     return res.status(404).send('casa não encontrada');
@@ -171,6 +170,7 @@ handler.patch(async (req, res) => {
     const newHouseResponse: HouseResponseDTO = {
       id: faunaResponse.ref.id,
       type: houseTypes[Number(faunaResponse.data.typeId)],
+      status: houseStatus[Number(faunaResponse.data.statusId)],
       ...faunaResponse.data,
     };
 

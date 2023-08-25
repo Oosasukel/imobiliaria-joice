@@ -1,11 +1,7 @@
-const Home = () => {
-  return (
-    <main>
-      <h1>Titulo</h1>
+import { Home } from '../pageComponents/Home';
 
-      <p>Meu site bonito</p>
-    </main>
-  );
+const HomePage = () => {
+  return <Home />;
 };
 
-export default Home;
+export default HomePage;
