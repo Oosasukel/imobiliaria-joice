@@ -23,7 +23,7 @@ export const Footer = () => {
         </>
 
         <p className="copyrigth">
-          ©2022 Copyright - Imobiliária Joice Decicillo | CRECI {configs.creci}{' '}
+          ©2023 Copyright - Imobiliária Joice Decicillo | CRECI {configs.creci}{' '}
           | Todos os direitos reservados
         </p>
       </Content>

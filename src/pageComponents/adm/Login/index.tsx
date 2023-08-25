@@ -48,15 +48,17 @@ export const Login = () => {
     <S.Container onSubmit={loading ? undefined : handleSubmit}>
       <S.ContainerCard>
         <Card>
-          <S.Senha>
+          <S.InputContainer>
             <Input type="email" ref={emailRef} placeholder="Digite seu email" />
+          </S.InputContainer>
+          <S.InputContainer>
             <Input
               type="password"
               ref={passwordRef}
               placeholder="Digite sua senha"
             />
             {!!error && <span>{error}</span>}
-          </S.Senha>
+          </S.InputContainer>
           <Button loading={loading} width="100%">
             Entrar
           </Button>

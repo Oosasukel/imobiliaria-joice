@@ -12,6 +12,6 @@ export const ContainerCard = styled.div`
   width: 385px;
 `;
 
-export const Senha = styled.div`
+export const InputContainer = styled.div`
   margin-bottom: 16px;
 `;
